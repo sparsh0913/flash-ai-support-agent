@@ -1,6 +1,13 @@
 export default function ChatInput({ input, setInput, handleSend }){
 
 
+  const handleKeyDown = (e)=>{
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      handleSend();
+    }
+  }
+
     return(
 
         <div className="absolute bottom-0 left-0 right-0 z-20 px-6 pb-6 pt-10 
@@ -14,6 +21,7 @@ export default function ChatInput({ input, setInput, handleSend }){
       placeholder="Ask anything..."
       value={input}
       onChange={(e)=>setInput(e.target.value)}
+      onKeyDown={handleKeyDown}
       className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
     />
 
