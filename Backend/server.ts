@@ -3,6 +3,7 @@ import { agent } from "./agent.js";
 import express from "express";
 import cors from "cors";
 import {google} from "googleapis";
+import { connectDB } from "./db.js";
 
 /* import {agent} from "./agent.js"; */
 
@@ -127,6 +128,8 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
     }
 })
 
+
+await connectDB();
 app.listen(8080 , ()=>{
     console.log("listening to port 8080");
 });
