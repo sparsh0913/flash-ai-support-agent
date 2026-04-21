@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { agent } from "./agent.js";
+import { agent } from "./src/agents/agent.js";
 import express from "express";
 import cors from "cors";
 import {google} from "googleapis";
-import { connectDB } from "./db.js";
+import { connectDB } from "./src/config/db.js";
 
 /* import {agent} from "./agent.js"; */
 

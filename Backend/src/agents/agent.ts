@@ -1,27 +1,17 @@
 import "dotenv/config";
-import { ChatGroq } from "@langchain/groq";
 import { StateGraph, MessagesAnnotation, START, END } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { tools } from "./tool.js";
+import { tools } from "../tools/tool.js";
 import { AIMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
-import { writeFileSync } from "node:fs";
+import { model } from "../config/model.js";
 
-//initialise the LLM
-const model = new ChatGroq({
-   /*  model: "llama-3.1-8b-instant", */ //better 
-                /* "llama-3.3-70b-versatile", */
-   model: "llama-3.1-8b-instant",
-    temperature: 0,
-    maxTokens:1024,
-    apiKey:process.env.GROQ_API_KEY
-}).bindTools(tools);
-
+const toolModel = model.bindTools(tools);
 
 //Assistant node
 async function callModel(state : typeof MessagesAnnotation.State){
 
-const response = await model.invoke(state.messages);
+const response = await toolModel.invoke(state.messages);
 return {messages:[response]};
 }
 
