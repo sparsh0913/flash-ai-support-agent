@@ -6,12 +6,17 @@ import ChatInput from "./components/ChatInput";
 import { BrowserRouter, createBrowserRouter, RouterProvider } from "react-router-dom";
 import ChatPage from "./pages/ChatPage";
 import ResearchPage from "./pages/ResearchPage";
+import HomePage from "./pages/HomePage";
 
 
 const router = createBrowserRouter(
   [
-    {
+     {
       path: "/",
+      element:<HomePage/>
+    },
+    {
+      path: "/chat",
       element:<ChatPage/>
     },
     {

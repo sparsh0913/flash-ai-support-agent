@@ -1,10 +1,11 @@
 import "dotenv/config";
-import { agent } from "./src/agents/agent.js";
+import { agent } from "./src/agents/calendar/agent.js";
 import express from "express";
 import cors from "cors";
 import {google} from "googleapis";
 import { connectDB } from "./src/config/db.js";
 import { runResearch } from "./src/agents/research/researchAgent.js";
+import { runChat } from "./src/agents/chat/agent.js";
 
 /* import {agent} from "./agent.js"; */
 
@@ -159,3 +160,22 @@ res.status(500).json({
 })
 }
 })
+
+
+//Chat Agent
+
+app.post("/", async (req, res) => {
+  try {
+    const { query } = req.body;
+
+    const reply = await runChat(query);
+
+    res.json({ reply });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: "Chat failed"
+    });
+  }
+});

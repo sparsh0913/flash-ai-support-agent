@@ -1,10 +1,10 @@
 import "dotenv/config";
 import { StateGraph, MessagesAnnotation, START, END } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { tools } from "../tools/tool.js";
+import { tools } from "./tool.js";
 import { AIMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
-import { model } from "../config/model.js";
+import { model } from "../../config/model.js";
 
 const toolModel = model.bindTools(tools);
 

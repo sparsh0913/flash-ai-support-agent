@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { ChatGroq } from "@langchain/groq";
-import { tools } from "../tools/tool.js";
+import { tools } from "../agents/calendar/tool.js";
 
 
 
