@@ -6,7 +6,7 @@ const reflectionSchema = z.object({
   superfluous : z.string().describe("Critique of what is superfluous")
 })
 
-export const questionAnswerSchema = z.object({
+/* export const questionAnswerSchema = z.object({
   answer : z.string().describe("~250 word detailed answer to the question"),
   reflection: reflectionSchema,
   searchQueries: z.array(z.string()).describe(
@@ -15,7 +15,14 @@ export const questionAnswerSchema = z.object({
 
 
 });
+ */
 
+export const questionAnswerSchema = z.object({
+  answer: z.string(),
+  missing: z.string(),
+  superfluous: z.string(),
+  searchQueries: z.array(z.string()).max(3)
+});
 export type questionAnswer = z.infer<typeof questionAnswerSchema>; //to get the type of the schema
 
 export const GraphState = Annotation.Root({

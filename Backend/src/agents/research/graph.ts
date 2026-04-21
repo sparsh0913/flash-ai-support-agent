@@ -36,7 +36,7 @@ const response = await llmWithStructure.invoke([
 async function revisorNode(state: typeof GraphState.State){
 
 const currentDateTime = new Date().toLocaleString('sv-SE');
-const SYSTEM_PROMPT = `You are an expert researcher.
+/* const SYSTEM_PROMPT = `You are an expert researcher.
 Current time: ${currentDateTime}
 
 Your task is to revise your previous answer using the search results provided.
@@ -68,7 +68,21 @@ JavaScript is evolving rapidly with new features [1]. WebAssembly integration co
 References:
 - [1] https://example.com/js-features
 - [2] https://example.com/webassembly`
+ */
 
+const SYSTEM_PROMPT = `
+You are an expert researcher.
+
+Return JSON with these fields:
+
+1. answer → improved final researched answer with inline citations like [1], [2]
+2. missing → what was missing in previous answer
+3. superfluous → what was weak / unnecessary
+4. Return EXACTLY 3 or fewer searchQueries.
+Never exceed 3.
+
+Keep answer concise and factual.
+`;
 
     const llmWithStructure = model.withStructuredOutput(questionAnswerSchema);
 

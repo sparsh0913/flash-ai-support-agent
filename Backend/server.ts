@@ -4,6 +4,7 @@ import express from "express";
 import cors from "cors";
 import {google} from "googleapis";
 import { connectDB } from "./src/config/db.js";
+import { runResearch } from "./src/agents/research/researchAgent.js";
 
 /* import {agent} from "./agent.js"; */
 
@@ -134,3 +135,27 @@ app.listen(8080 , ()=>{
     console.log("listening to port 8080");
 });
 
+//Research Agent
+
+app.post("/api/research" , async(req,res)=>{
+
+try{
+const {query} = req.body;
+
+if(!query){
+    return res.status(400).json({
+        error:"Query is required"
+    })
+}
+
+const result = await runResearch(query);
+res.json(result);
+
+} catch(err){
+console.log(err);
+
+res.status(500).json({
+    error: "Research Failed"
+})
+}
+})
