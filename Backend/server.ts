@@ -6,12 +6,20 @@ import {google} from "googleapis";
 import { connectDB } from "./src/config/db.js";
 import { runResearch } from "./src/agents/research/researchAgent.js";
 import { runChat } from "./src/agents/chat/agent.js";
+import authRouter from "./src/auth/routes/auth.routes.js";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+
 
 /* import {agent} from "./agent.js"; */
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev')); //logger
+app.use(cookieParser());
+
+app.use("/api/auth", authRouter);
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -163,7 +171,6 @@ res.status(500).json({
 
 
 //Chat Agent
-
 app.post("/", async (req, res) => {
   try {
     const { query } = req.body;
@@ -179,3 +186,8 @@ app.post("/", async (req, res) => {
     });
   }
 });
+
+/* {
+  "username":"shubh",
+  "password":"123456"
+} */

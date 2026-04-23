@@ -45,7 +45,7 @@ export default function Sidebar(){
              hover:bg-purple-600/30 transition-all
              text-white font-medium text-base"
               >
-                 <i className="fa-solid fa-comment-dots"></i> Calendar Agent
+                 <i className="fa-solid fa-calendar-check"></i> Calendar Agent
                 </div>
 
                 <div onClick={() => navigate("/research")}
