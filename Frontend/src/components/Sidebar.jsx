@@ -8,7 +8,7 @@ export default function Sidebar(){
                 <div className="mb-6">
                 <button onClick={() => navigate("/")}
                 className="w-full bg-purple-600 hover:bg-purple-500 transition py-2 rounded-xl">
-                  New Chat
+                  <i class="fa-solid fa-pen-to-square"></i> New Chat
                 </button>
               </div>
 

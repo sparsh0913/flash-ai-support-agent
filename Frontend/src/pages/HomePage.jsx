@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 
-export default function ChatPage() {
+export default function ChatPage({ user , setUser}) {
 
       const [messages,setMessages] = useState([]);
       const [input , setInput] = useState("");
@@ -61,7 +61,7 @@ export default function ChatPage() {
               <Sidebar></Sidebar>
               <div className="flex-1 relative z-10 flex flex-col">
            <div className="padding-4 border-b border-purple-900/40">
-                  <Header></Header>
+                  <Header user={user} setUser={setUser} />
            </div>
            <ChatMessages
            messages={messages}
