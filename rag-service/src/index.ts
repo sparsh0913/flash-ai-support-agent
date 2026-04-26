@@ -1,14 +1,7 @@
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-});
-
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Rejection:", err);
-});
-
 import express from "express";
 import cors from "cors";
 import uploadRoute from "./routes/upload.route.js";
+import searchRoute from "./routes/search.route.js";
 /* import { pineconeIndex } from "./config/pinecone.js"; */
 
 const app = express();
@@ -24,6 +17,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/upload", uploadRoute);
+app.use("/search" , searchRoute);
 
 const PORT = 5001;
 
