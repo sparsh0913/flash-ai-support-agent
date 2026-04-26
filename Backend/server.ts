@@ -9,6 +9,8 @@ import { runChat } from "./src/agents/chat/agent.js";
 import authRouter from "./src/auth/routes/auth.routes.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import graph from "./src/graph/graph.js";
+import { HumanMessage } from "@langchain/core/messages";
 
 
 /* import {agent} from "./agent.js"; */
@@ -143,12 +145,6 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
     }
 })
 
-
-await connectDB();
-app.listen(8080 , ()=>{
-    console.log("listening to port 8080");
-});
-
 //Research Agent
 
 app.post("/api/research" , async(req,res)=>{
@@ -192,7 +188,42 @@ app.post("/", async (req, res) => {
   }
 });
 
-/* {
+/*  {
   "username":"shubh",
   "password":"123456"
-} */
+} */ 
+
+   app.post("/api/retrieval", async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({
+        error: "Message is required",
+      });
+    }
+
+    const result = await graph.invoke({
+      messages: [new HumanMessage(message)],
+      iterations: 0,
+      finalAnswer: "",
+    });
+
+    res.json({
+      success: true,
+      answer: result.finalAnswer,
+    });
+
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      error: "Retrieval Failed",
+    });
+  }
+}); 
+
+  await connectDB();
+app.listen(8080 , ()=>{
+    console.log("listening to port 8080");
+});
