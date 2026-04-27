@@ -13,6 +13,7 @@ router.post("/", upload.single("pdf"), async (req,res)=>{
     
     try{
    const file = req.file;
+   const userId = req.body.userId;
 
    if(!file){
     return res.status(400).json({
@@ -21,10 +22,16 @@ router.post("/", upload.single("pdf"), async (req,res)=>{
     })
    };
 
+   if (!userId) {
+      return res.status(400).json({ success:false, message:"No userId" });
+    }
+
+    console.log(userId);
+
    const result = await processPdf(
   file.path,
   file.originalname,
-  "test-user-1"
+  userId
 );
 
     res.json({
@@ -33,6 +40,7 @@ router.post("/", upload.single("pdf"), async (req,res)=>{
 });
 
     }catch(err){
+        console.error("UPLOAD ERROR:", err);
         res.status(500).json({
       success: false,
       message: "Error occurred",

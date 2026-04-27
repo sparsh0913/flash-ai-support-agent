@@ -1,4 +1,4 @@
-export default function ChatInput({ input, setInput, handleSend }){
+export default function ChatInput({ input, setInput, handleSend ,  setFile, vaultMode, file}){
 
   const handleKeyDown = (e)=>{
     if(e.key === 'Enter'){
@@ -15,6 +15,28 @@ export default function ChatInput({ input, setInput, handleSend }){
          <div className="max-w-3xl mx-auto">
   <div className="flex items-center bg-white/5 backdrop-blur-xl border border-purple-900/40 rounded-2xl px-4 py-3">
     
+    {vaultMode && (
+  <label className="mr-3 cursor-pointer text-gray-400 hover:text-white transition">
+    <i className="fa-solid fa-paperclip text-lg"></i>
+
+    <input
+      type="file"
+      accept=".pdf"
+      className="hidden"
+      onChange={(e) => setFile(e.target.files[0])}
+    />
+  </label>
+)}
+
+{file && (
+  <button
+    onClick={() => window.open(URL.createObjectURL(file), "_blank")}
+    className="mr-3 text-sm text-purple-300 hover:text-white underline"
+  >
+    {file.name}
+  </button>
+)}
+
     <input
       type="text"
       placeholder="Ask anything..."

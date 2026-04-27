@@ -17,7 +17,9 @@ export async function readPdf(filePath : string){
     })
 
     const chunks = await splitter.splitDocuments(docs);
+    console.log("Chunks created:", chunks.length);
     return chunks;
+    
 }
 
 export async function processPdf(filePath: string ,fileName:string , userId:string ){
@@ -40,6 +42,12 @@ export async function processPdf(filePath: string ,fileName:string , userId:stri
     };
   })
 );
+
+  console.log("Vectors created:", vectors.length);
+
+if (vectors.length === 0) {
+  throw new Error("No text extracted from PDF");
+}
 
 await pineconeIndex.upsert(vectors);
 

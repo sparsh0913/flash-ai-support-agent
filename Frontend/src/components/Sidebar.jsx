@@ -45,7 +45,7 @@ export default function Sidebar(){
              hover:bg-purple-600/30 transition-all
              text-white font-medium text-base"
               >
-                 <i className="fa-solid fa-calendar-check"></i> Calendar Agent
+                 <i className="fa-solid fa-calendar-check"></i> Flash Manager
                 </div>
 
                 <div onClick={() => navigate("/research")}
@@ -54,7 +54,17 @@ export default function Sidebar(){
              hover:bg-purple-600/30 transition-all
              text-white font-medium text-base"
             >
-                 <i className="fa-solid fa-microscope"></i> Research Agent
+                 <i className="fa-solid fa-microscope"></i> Flash Research
+                </div>
+
+                <div
+                  onClick={() => navigate("/vault")}
+                  className="mt-2 p-3 rounded-xl cursor-pointer
+                  bg-purple-600/20 border border-purple-500/30
+                  hover:bg-purple-600/30 transition-all
+                  text-white font-medium text-base"
+                >
+                  <i className="fa-solid fa-folder-open"></i> Flash Vault
                 </div>
         </div>
     )

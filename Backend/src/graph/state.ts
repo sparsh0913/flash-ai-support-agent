@@ -12,4 +12,5 @@ export const State = Annotation.Root({
     reducer: (_, update) => update ?? "",
     default: () => "",
   }),
+   userId: Annotation<string>()
 });

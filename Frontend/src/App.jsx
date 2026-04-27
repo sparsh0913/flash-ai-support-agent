@@ -9,6 +9,7 @@ import ResearchPage from "./pages/ResearchPage";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import VaultPage from "./pages/VaultPage";
 
 function App() {
 const [user, setUser] = useState(null);
@@ -35,6 +36,10 @@ const router = createBrowserRouter(
       path: "/login",
       element:<LoginPage setUser={setUser}/>
     },
+    {
+       path: "/vault",
+       element: <VaultPage user={user} setUser={setUser} />
+}
   ]
 )
 

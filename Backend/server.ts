@@ -205,6 +205,7 @@ app.post("/", async (req, res) => {
 
     const result = await graph.invoke({
       messages: [new HumanMessage(message)],
+      userId: req.body.userId,
       iterations: 0,
       finalAnswer: "",
     });

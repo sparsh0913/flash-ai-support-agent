@@ -94,7 +94,7 @@ export async function retrievalNode(state: typeof State.State){
     .map((query) => query.trim())
     .filter(Boolean);
 
-    const userId = "test-user-1";
+    const userId = state.userId;
   const result = await retrievalTool(queries, userId);
 
   return {
