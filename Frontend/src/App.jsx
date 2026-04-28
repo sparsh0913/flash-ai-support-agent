@@ -11,8 +11,10 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import VaultPage from "./pages/VaultPage";
 
+
 function App() {
 const [user, setUser] = useState(null);
+const hasRun = useRef(false);
 
 const router = createBrowserRouter(
   [
@@ -43,12 +45,34 @@ const router = createBrowserRouter(
   ]
 )
 
-  useEffect(() => {
+ useEffect(() => {
+  if (hasRun.current) return;
+    hasRun.current = true;
   const checkUser = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/me", {
-        credentials: "include"
-      });
+      const refreshResponse = await fetch(
+        "http://localhost:8080/api/auth/refreshToken",
+        {
+          credentials: "include",
+        }
+      );
+
+      console.log(refreshResponse.status);
+      if (!refreshResponse.ok) return;
+
+      const refreshData = await refreshResponse.json();
+      console.log(refreshData);
+
+      const token = refreshData.accessToken;
+
+      const response = await fetch(
+        "http://localhost:8080/api/auth/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) return;
 
@@ -60,6 +84,7 @@ const router = createBrowserRouter(
       console.log(error);
     }
   };
+
   checkUser();
 }, []);
 

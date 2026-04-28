@@ -54,7 +54,7 @@ function LoginPage({ setUser }) {
 
           <input
             type="email"
-            placeholder="Email"
+            placeholder="example@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 rounded-lg bg-black border border-zinc-700 focus:outline-none focus:border-purple-500"

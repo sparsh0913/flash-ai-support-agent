@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function Header({ user,setUser }){
   const navigate = useNavigate();
-
   const handleLogout = async () => {
   const response = await fetch("http://localhost:8080/api/auth/logout", {
     method: "POST",

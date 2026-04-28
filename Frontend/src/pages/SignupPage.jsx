@@ -55,7 +55,7 @@ const handleSignup = async (e) => {
           
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Enter Username"
             value={username}
              onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-3 rounded-lg bg-black border border-zinc-700 focus:outline-none focus:border-purple-500"
@@ -63,7 +63,7 @@ const handleSignup = async (e) => {
 
           <input
             type="email"
-            placeholder="Email"
+            placeholder="example@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 rounded-lg bg-black border border-zinc-700 focus:outline-none focus:border-purple-500"
@@ -71,7 +71,7 @@ const handleSignup = async (e) => {
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 rounded-lg bg-black border border-zinc-700 focus:outline-none focus:border-purple-500"
@@ -89,7 +89,7 @@ const handleSignup = async (e) => {
           <p className="text-sm text-gray-400 text-center mt-6">
             Already have an account?{" "}
             <Link to="/login" className="text-purple-400 hover:text-purple-300">
-                login
+                Login
             </Link>
             </p>
       </div>
