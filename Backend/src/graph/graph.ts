@@ -15,7 +15,7 @@ Decide whether the user message needs knowledge-base retrieval.
 Return only one word:
 
 query  -> if user asks question, asks info, asks summary, asks help from documents
-end    -> if greeting, thanks, casual chat, confirmation, small talk
+chat -> greeting, thanks, small talk, casual messages
 `;
    
 const lastMessage = state.messages[state.messages.length -1];
@@ -27,6 +27,24 @@ const lastMessage = state.messages[state.messages.length -1];
   return {
     messages: [new AIMessage(response.content as string)],
   };
+}
+
+//chat node
+export async function chatNode(state: typeof State.State) {
+  const messages = state.messages;
+  const lastMessage = messages[messages.length - 1];
+
+  const response = await model.invoke([
+    new SystemMessage(
+      "You are a friendly assistant inside Flash Vault. Reply briefly and helpfully. Encourage users to ask about their uploaded PDF when relevant."
+    ),
+    new HumanMessage(lastMessage.content as string),
+  ]);
+     
+ return {
+  messages: [new AIMessage(response.content as string)],
+  finalAnswer: response.content as string
+}
 }
 
 //Query Node
@@ -214,11 +232,13 @@ const graph = new StateGraph(State)
   .addNode("retrieval", retrievalNode)
   .addNode("draft", draftNode)
   .addNode("critique", critiqueNode)
+  .addNode("chat", chatNode)
 
   .addEdge(START, "router")
   .addEdge("query", "retrieval")
   .addEdge("retrieval", "draft")
   .addEdge("draft", "critique")
+  .addEdge("chat", END)
 
     .addConditionalEdges(
     "router",
@@ -230,11 +250,11 @@ const graph = new StateGraph(State)
         lastMessage.content
       ).trim().toLowerCase();
 
-      if (decision === "end") {
-        return END;
+      if (decision === "query") {
+        return "query";
       }
 
-      return "query";
+      return "chat";
     }
   )
 
