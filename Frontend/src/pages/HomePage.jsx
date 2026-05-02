@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 export default function ChatPage({ user , setUser}) {
 
@@ -24,30 +25,59 @@ export default function ChatPage({ user , setUser}) {
     
       setMessages((prev)=>[...prev , userMessage]);
       setInput("");
-    
       setLoading(true);
-      const response = await fetch("http://localhost:8080/",{
-       
-      method:"POST",
-      headers:{
-        "content-type": "application/JSON"
-      },
-      body : JSON.stringify({
-        query:input,
-      })
-      });
+    await fetchEventSource("http://localhost:8080/", {
+      method: "POST",
+
+  headers: {
+    "Content-Type": "application/json",
+  },
+
+  body: JSON.stringify({
+    query: input,
+  }),
+
+  onmessage(event) {
+  const parsedData = JSON.parse(event.data);
     
-      const data = await response.json();
-      console.log(data);
-    
-      const assistantMessage = {
-        role:"assistant",
-        content:data.reply
-      };
-      setLoading(false);
-    
-      setMessages((prev)=>[...prev,assistantMessage]);
-    
+  if (parsedData.type === "ai") {
+
+    setMessages((prevMessages) => {
+
+      const lastMessage = prevMessages[prevMessages.length - 1];
+
+      if (lastMessage && lastMessage.role === "assistant") {
+
+        const clonedMessages = [...prevMessages];
+
+        clonedMessages[clonedMessages.length - 1] = {
+          ...lastMessage,
+          content: lastMessage.content + parsedData.payload.text,
+        };
+
+        return clonedMessages;
+
+      } else {
+
+        return [
+          ...prevMessages,
+          {
+            role: "assistant",
+            content: parsedData.payload.text,
+          },
+        ];
+      }
+    });
+  }
+},
+  onclose() {
+    setLoading(false);
+  },
+  onerror(error) {
+    console.log(error);
+    setLoading(false);
+  },
+})
     }
     
     useEffect(()=>{
