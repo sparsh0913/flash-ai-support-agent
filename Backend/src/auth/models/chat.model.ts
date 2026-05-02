@@ -35,7 +35,10 @@ const chatSchema = new mongoose.Schema(
       default: "New Chat",
     },
 
-    messages: [messageSchema],
+    messages: {
+    type: [messageSchema],
+     default: [],
+  }
   },
   {
     timestamps: true,

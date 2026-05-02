@@ -11,6 +11,9 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import graph from "./src/graph/graph.js";
 import { HumanMessage } from "@langchain/core/messages";
+import Chat from "./src/auth/models/chat.model.js";
+import { requireAuth } from "./src/auth/middleware/auth.middleware.js";
+import { createChat } from "./src/history/chat.helper.js";
 
 
 /* import {agent} from "./agent.js"; */
@@ -65,6 +68,7 @@ app.get("/callback", async (req,res)=>{
 })
 
 
+//calendar agent
 app.post("/chat" , async(req,res)=>{
 
   const timeZoneString = "Asia/Kolkata";
@@ -176,10 +180,31 @@ app.post("/", async (req, res) => {
   try {
     const { query } = req.body;
 
-    const reply = await runChat(query);
+    res.writeHead(200, {
+  "Content-Type": "text/event-stream",
+  "Cache-Control": "no-cache",
+  Connection: "keep-alive",
+});
 
-    res.json({ reply });
+   /*  const reply = await runChat(query);
 
+    res.json({ reply }); */
+
+    const stream = await runChat(query);
+
+    for await(const chunk of stream){
+      const [messageChunk] = chunk;
+      if (!messageChunk.content) continue;
+
+      const message = {
+        type: "ai",
+        payload: {
+          text: messageChunk.content
+        }
+      };
+      res.write(`data: ${JSON.stringify(message)}\n\n`);
+    }
+  res.end();
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -188,10 +213,6 @@ app.post("/", async (req, res) => {
   }
 });
 
-/*  {
-  "username":"shubh",
-  "password":"123456"
-} */ 
 
    app.post("/api/retrieval", async (req, res) => {
   try {
@@ -223,6 +244,7 @@ app.post("/", async (req, res) => {
     });
   }
 }); 
+
 
   await connectDB();
 app.listen(8080 , ()=>{
