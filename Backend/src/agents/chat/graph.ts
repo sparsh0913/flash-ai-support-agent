@@ -36,8 +36,6 @@ Current Time Zone: ${timeZone}
 Current Date & Time: ${currentDateTime}
 `;
 
-
-
   const response = await llmWithTools.invoke([
     {
       role: "system",

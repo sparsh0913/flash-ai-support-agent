@@ -226,7 +226,7 @@ try{
     const refreshToken = req.cookies.refreshToken;
 
     if(!refreshToken){
-        res.status(401).json({
+       return res.status(401).json({
             message: "Refresh Token not found!"
         })
     };

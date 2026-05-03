@@ -41,3 +41,37 @@ next();
     });
   }
 }
+
+export async function optionalAuth(
+   req: Request,
+   res: Response,
+   next: NextFunction
+){
+   try {
+
+      const authHeader = req.headers.authorization;
+
+      if(!authHeader || !authHeader.startsWith("Bearer ")){
+         return next();
+      }
+
+      const token = authHeader.split(" ")[1];
+
+      const decoded = jwt.verify(token, config.JWT_SECRET) as {
+         id:string;
+      };
+
+      const user = await userModel
+      .findById(decoded.id)
+      .select("-password");
+
+      if(user){
+         (req as any).user = user;
+      }
+
+      next();
+
+   } catch(error){
+      next();
+   }
+}

@@ -12,8 +12,5 @@ export async function runChat(query: string) {
       streamMode:"messages"
     });
 
- /*  const lastMessage = result.messages[result.messages.length - 1] as any;
-
-  return lastMessage.content; */
   return stream;
 }

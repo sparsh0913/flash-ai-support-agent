@@ -25,7 +25,7 @@ for(let i=0;i<parsed.searchQueries.length;i++){
     for(const result of results){
         cleanedResult.push({
             query: query,
-            content:result.content || '',
+            content:result.content.slice(0,500) || '',
             url:result.url || ''
         })
     }

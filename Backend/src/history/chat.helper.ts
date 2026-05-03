@@ -1,4 +1,4 @@
-import Chat from "../auth/models/chat.model.js";
+import Chat from "./chat.model.js";
 
 export async function createChat(
   userId: string,
@@ -16,3 +16,27 @@ export async function createChat(
 
   return chat;
 }
+
+export async function appendMessage(
+   chatId:string,
+   message:{
+      role:string,
+      content:string
+   }
+){
+
+   const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+         $push:{
+            messages:message
+         }
+      },
+      {
+         new:true
+      }
+   );
+
+   return updatedChat;
+}
+

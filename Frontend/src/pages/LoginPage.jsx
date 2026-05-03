@@ -28,7 +28,9 @@ function LoginPage({ setUser }) {
     console.log(data);
 
     if (response.ok) {
-       setUser(data.user);
+       setUser({ 
+        ...data.user,
+   accessToken: data.accessToken});
       navigate("/");
     }
 

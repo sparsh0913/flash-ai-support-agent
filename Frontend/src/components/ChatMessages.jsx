@@ -1,6 +1,6 @@
 import { BeatLoader } from "react-spinners";
 
-export default function StateMessages({ messages, messageEndRef ,loading}){
+export default function StateMessages({ messages, messageEndRef ,loading, status}){
 
     return(
 
@@ -34,6 +34,12 @@ export default function StateMessages({ messages, messageEndRef ,loading}){
               </div>
             </div>  
            )}
+
+           {status && (
+          <div className="px-2 text-sm text-purple-300">
+              {status}
+          </div>
+        )}
 
         <div ref={messageEndRef} />
        </div>

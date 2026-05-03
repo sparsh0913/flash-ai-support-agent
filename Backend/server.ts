@@ -11,10 +11,10 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import graph from "./src/graph/graph.js";
 import { HumanMessage } from "@langchain/core/messages";
-import Chat from "./src/auth/models/chat.model.js";
-import { requireAuth } from "./src/auth/middleware/auth.middleware.js";
-import { createChat } from "./src/history/chat.helper.js";
-
+import Chat from "./src/history/chat.model.js";
+import { optionalAuth } from "./src/auth/middleware/auth.middleware.js";
+import { createChat , appendMessage} from "./src/history/chat.helper.js";
+import chatRoutes from "./src/history/chat.routes.js";
 
 /* import {agent} from "./agent.js"; */
 
@@ -28,7 +28,7 @@ app.use(
 app.use(express.json());
 app.use(morgan('dev')); //logger
 app.use(cookieParser());
-
+app.use("/api", chatRoutes);
 app.use("/api/auth", authRouter);
 
 const oauth2Client = new google.auth.OAuth2(
@@ -150,11 +150,10 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
 })
 
 //Research Agent
-
-app.post("/api/research" , async(req,res)=>{
+app.post("/api/research" ,optionalAuth, async(req,res)=>{
 
 try{
-const {query} = req.body;
+const {query,chatId} = req.body;
 
 if(!query){
     return res.status(400).json({
@@ -162,8 +161,106 @@ if(!query){
     })
 }
 
-const result = await runResearch(query);
-res.json(result);
+res.writeHead(200, {
+  "Content-Type": "text/event-stream",
+  "Cache-Control": "no-cache",
+  Connection: "keep-alive",
+});
+
+
+    let activeChatId = chatId;
+    if((req as any).user){
+
+   if(!activeChatId){
+      const newChat = await createChat(
+         (req as any).user.id,
+         "research",
+         query
+      );
+
+      activeChatId = newChat._id.toString();
+
+      const chatEvent = {
+   type: "research",
+   payload: {
+      chatId: activeChatId
+   }
+};
+res.write(`data:${JSON.stringify(chatEvent)}\n\n`);
+   }
+   if(activeChatId){
+   await appendMessage(
+      activeChatId,
+      {
+         role:"user",
+         content:query
+      }
+   );
+}
+}
+
+
+const stream = await runResearch(query);
+const statusEvent = {
+  type: "status",
+  payload: {
+    message: "Searching web...",
+  },
+};
+res.write(`data:${JSON.stringify(statusEvent)}\n\n`);
+
+await new Promise((resolve) => setTimeout(resolve, 2000));
+
+const reviewingEvent = {
+  type: "status",
+  payload: {
+    message: "Reviewing sources...",
+  },
+};
+
+res.write(`data:${JSON.stringify(reviewingEvent)}\n\n`);
+
+await new Promise((resolve) => setTimeout(resolve, 2000));
+
+const generatingEvent = {
+  type: "status",
+  payload: {
+    message: "Generating final answer...",
+  },
+};
+
+res.write(`data:${JSON.stringify(generatingEvent)}\n\n`);
+
+let finalAnswer = "";
+for await (const chunk of stream) {
+console.log(chunk);
+const metadata = chunk[1];
+if(metadata.langgraph_node !== "revisor") continue;
+
+const messageChunk = chunk[0];
+if(!messageChunk?.content) continue;
+
+const content = messageChunk.content as string;
+const parsed = JSON.parse(content);
+const aiEvent = {
+  type: "ai",
+  payload: {
+    text: parsed.answer,
+  },
+};
+finalAnswer = parsed.answer;
+res.write(`data:${JSON.stringify(aiEvent)}\n\n`);
+}
+if(activeChatId){
+   await appendMessage(
+      activeChatId,
+      {
+         role:"assistant",
+         content: finalAnswer
+      }
+   )
+}
+res.end();
 
 } catch(err){
 console.log(err);
@@ -176,9 +273,9 @@ res.status(500).json({
 
 
 //Chat Agent
-app.post("/", async (req, res) => {
+app.post("/", optionalAuth,async (req, res) => {
   try {
-    const { query } = req.body;
+    const { query , chatId } = req.body;
 
     res.writeHead(200, {
   "Content-Type": "text/event-stream",
@@ -186,15 +283,48 @@ app.post("/", async (req, res) => {
   Connection: "keep-alive",
 });
 
-   /*  const reply = await runChat(query);
+    let activeChatId = chatId;
+    if((req as any).user){
 
-    res.json({ reply }); */
+   if(!activeChatId){
+      const newChat = await createChat(
+         (req as any).user.id,
+         "chat",
+         query
+      );
 
+      activeChatId = newChat._id.toString();
+
+      const chatEvent = {
+   type: "chat",
+   payload: {
+      chatId: activeChatId
+   }
+};
+res.write(`data:${JSON.stringify(chatEvent)}\n\n`);
+   }
+   if(activeChatId){
+   await appendMessage(
+      activeChatId,
+      {
+         role:"user",
+         content:query
+      }
+   );
+}
+}
+    
     const stream = await runChat(query);
-
+    let fullResponse = "";
     for await(const chunk of stream){
       const [messageChunk] = chunk;
+
       if (!messageChunk.content) continue;
+
+    if(messageChunk.constructor.name !== "AIMessageChunk"){
+        continue;
+    }
+      fullResponse += messageChunk.content;
 
       const message = {
         type: "ai",
@@ -204,6 +334,15 @@ app.post("/", async (req, res) => {
       };
       res.write(`data: ${JSON.stringify(message)}\n\n`);
     }
+    if(activeChatId){
+   await appendMessage(
+      activeChatId,
+      {
+         role:"assistant",
+         content:fullResponse
+      }
+   );
+}
   res.end();
   } catch (error) {
     console.log(error);
