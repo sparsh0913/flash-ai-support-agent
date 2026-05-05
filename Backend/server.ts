@@ -387,15 +387,34 @@ const nodeStatusMap: Record<string, string> = {
 };
     let lastNode = "";
     let currentDraftId = 0;
-    console.log("---- NEW REQUEST ----");
+    let latestDraft = "";
+  /*  let isFinal = false; */
 for await(const chunk of stream){
     const metadata = chunk[1];
     const node = metadata?.langgraph_node;
+    const content = chunk[0]?.content;
+
+    if (node === "draft" && content) {
+     latestDraft = content as string;
+   }
 
     if (node === "draft" && lastNode !== "draft") {
         currentDraftId++;
   console.log("NEW DRAFT STARTED -> ID:", currentDraftId);
 }
+
+/* if (node === "critique" && content) {
+  const text =
+    typeof content === "string"
+      ? content
+      : JSON.stringify(content);
+
+  if (text.toLowerCase().includes("done")) {
+    isFinal = true;
+  }
+}
+ */
+
 
 if (node && node !== lastNode) {
   const status = nodeStatusMap[node] || "Processing...";
@@ -409,6 +428,16 @@ if (node && node !== lastNode) {
   lastNode = node;
 }
 }
+const finalResponse = latestDraft || "Sorry, I couldn't generate a response.";
+
+res.write(
+  `data: ${JSON.stringify({
+    type: "final",
+    payload: finalResponse,
+  })}\n\n`
+);
+
+res.end();
 res.end();
   } catch (err) {
     console.log(err);
@@ -417,7 +446,6 @@ res.end();
         type: "error",
         payload: { message: "Something went wrong" }
     })}\n\n`);
-
     res.end();
 }
 }); 

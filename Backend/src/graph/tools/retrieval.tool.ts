@@ -4,8 +4,6 @@ export async function retrievalTool(
   queries: string[],
   userId: string
 ) {
-  console.log("QUERIES:", queries);
- console.log("USER ID:", userId);
   try {
     const { data } = await axios.post(
       "http://localhost:5001/search",
