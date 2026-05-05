@@ -167,7 +167,6 @@ res.writeHead(200, {
   Connection: "keep-alive",
 });
 
-
     let activeChatId = chatId;
     if((req as any).user){
 
@@ -198,8 +197,6 @@ res.write(`data:${JSON.stringify(chatEvent)}\n\n`);
    );
 }
 }
-
-
 const stream = await runResearch(query);
 const statusEvent = {
   type: "status",
@@ -233,7 +230,6 @@ res.write(`data:${JSON.stringify(generatingEvent)}\n\n`);
 
 let finalAnswer = "";
 for await (const chunk of stream) {
-console.log(chunk);
 const metadata = chunk[1];
 if(metadata.langgraph_node !== "revisor") continue;
 
@@ -272,7 +268,7 @@ res.status(500).json({
 })
 
 
-//Chat Agent------------------------------------------------------------------------------------------------------
+//Chat Agent--------------------------------------------------------------------------------------------------------------------------------------------------------
 app.post("/", optionalAuth,async (req, res) => {
   try {
     const { query , chatId } = req.body;
@@ -353,10 +349,10 @@ res.write(`data:${JSON.stringify(chatEvent)}\n\n`);
 });
 
 
-//Retrieval node-----------------------------------------------------------------------------------
+//Retrieval node-----------------------------------------------------------------------------------------------------------------------------------
    app.post("/api/retrieval",requireAuth, async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, chatId } = req.body;
     if (!message) {
       return res.status(400).json({
         error: "Message is required",
@@ -367,6 +363,34 @@ res.write(`data:${JSON.stringify(chatEvent)}\n\n`);
     "Cache-Control":"no-cache",
     Connection:"keep-alive"
      });
+
+     let activeChatId = chatId;
+
+if ((req as any).user && !activeChatId) {
+  const newChat = await createChat(
+    (req as any).user.id,
+    "vault", 
+    message
+  );
+
+  activeChatId = newChat._id.toString();
+
+  const chatEvent = {
+    type: "vault", 
+    payload: {
+      chatId: activeChatId,
+    },
+  };
+
+  res.write(`data: ${JSON.stringify(chatEvent)}\n\n`);
+}
+
+if (activeChatId) {
+  await appendMessage(activeChatId, {
+    role: "user",
+    content: message,
+  });
+}
 
     const stream = await graph.stream({
       messages: [new HumanMessage(message)],
@@ -400,7 +424,6 @@ for await(const chunk of stream){
 
     if (node === "draft" && lastNode !== "draft") {
         currentDraftId++;
-  console.log("NEW DRAFT STARTED -> ID:", currentDraftId);
 }
 
 /* if (node === "critique" && content) {
@@ -436,6 +459,13 @@ res.write(
     payload: finalResponse,
   })}\n\n`
 );
+
+if (activeChatId) {
+  await appendMessage(activeChatId, {
+    role: "assistant",
+    content: latestDraft
+  });
+}
 
 res.end();
 res.end();

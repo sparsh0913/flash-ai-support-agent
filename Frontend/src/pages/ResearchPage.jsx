@@ -16,7 +16,7 @@ export default function ResearchPage({ user , setUser}) {
           const [activeChatId, setActiveChatId] = useState(null);
           const chatIdRef = useRef(null);
                   
-              const fetchChats = async()=>{
+ const fetchChats = async()=>{
    try{
       const response = await fetch("http://localhost:8080/api/chats?mode=research",{
          headers:{
@@ -31,7 +31,7 @@ export default function ResearchPage({ user , setUser}) {
 }
 
 const fetchChatMessages = async(chatId) => {
-try{
+  try{
     
     const response = await fetch(
         `http://localhost:8080/api/chats/${chatId}`,
@@ -58,7 +58,7 @@ useEffect(()=>{
    }
 },[user]);
 
-        const handleSend =  async ()=>{
+const handleSend =  async ()=>{
 
         if(!input.trim()) return;
         const userMessage = 
@@ -93,16 +93,24 @@ useEffect(()=>{
           if(data.type === "research"){
          setActiveChatId(data.payload.chatId);
    }
-        if(data.type === "ai"){
+        /* if(data.type === "ai"){
         const assistantMessage = {
             role:"assistant",
             content:data.payload.text
         }
-
         setMessages((prev)=>[...prev , assistantMessage]);
         setStatus("");
         setLoading(false);
-       }
+       } */
+
+        if(data.type === "ai"){
+          setStatus("");
+          setLoading(false);
+
+          if(activeChatId){
+            fetchChatMessages(activeChatId);
+          }
+}
         }})
   }        
     useEffect(() => {
