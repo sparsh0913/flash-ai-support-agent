@@ -212,19 +212,17 @@ ${draftAnswer.content}`
     ),
   ]);
 
-  return {
-    messages: [
-      new AIMessage(
-        String(response.content).trim().toLowerCase()
-      ),
-    ],
-    iterations: state.iterations + 1,
-  };
+ return {
+  messages: [
+    new AIMessage(
+      String(response.content).trim().toLowerCase()
+    )
+  ],
+  iterations: state.iterations + 1,
+};
 }
 
-
 //Connect Graph
-
 const graph = new StateGraph(State)
 
   .addNode("router", routerNode)
@@ -269,12 +267,9 @@ const graph = new StateGraph(State)
       ).trim().toLowerCase();
 
       if (
-        decision === "retry" &&
-        state.iterations < 1
-      ) {
+        decision === "retry" && state.iterations <= 1) {
         return "query";
       }
-
       return END;
     }
   )

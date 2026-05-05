@@ -1,9 +1,9 @@
-[] History
-[] chats refresh across routes
+[V] History
+[V] chats refresh across routes
 [] chatwindow texts
 [] calendar integration
 [V] Login lost on refresh
 [] Profile page
-[] streaming response
+[V] streaming response
 [] research accuracy
 [] Gen UI

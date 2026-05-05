@@ -12,7 +12,7 @@ import cookieParser from "cookie-parser";
 import graph from "./src/graph/graph.js";
 import { HumanMessage } from "@langchain/core/messages";
 import Chat from "./src/history/chat.model.js";
-import { optionalAuth } from "./src/auth/middleware/auth.middleware.js";
+import { optionalAuth ,requireAuth} from "./src/auth/middleware/auth.middleware.js";
 import { createChat , appendMessage} from "./src/history/chat.helper.js";
 import chatRoutes from "./src/history/chat.routes.js";
 
@@ -68,7 +68,7 @@ app.get("/callback", async (req,res)=>{
 })
 
 
-//calendar agent
+//calendar agent------------------------------------------------------------------------------------------------------------
 app.post("/chat" , async(req,res)=>{
 
   const timeZoneString = "Asia/Kolkata";
@@ -149,7 +149,7 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
     }
 })
 
-//Research Agent
+//Research Agent-------------------------------------------------------------------------------------------------
 app.post("/api/research" ,optionalAuth, async(req,res)=>{
 
 try{
@@ -272,7 +272,7 @@ res.status(500).json({
 })
 
 
-//Chat Agent
+//Chat Agent------------------------------------------------------------------------------------------------------
 app.post("/", optionalAuth,async (req, res) => {
   try {
     const { query , chatId } = req.body;
@@ -353,35 +353,73 @@ res.write(`data:${JSON.stringify(chatEvent)}\n\n`);
 });
 
 
-   app.post("/api/retrieval", async (req, res) => {
+//Retrieval node-----------------------------------------------------------------------------------
+   app.post("/api/retrieval",requireAuth, async (req, res) => {
   try {
     const { message } = req.body;
-
     if (!message) {
       return res.status(400).json({
         error: "Message is required",
       });
     }
+    res.writeHead(200,{
+    "Content-Type":"text/event-stream",
+    "Cache-Control":"no-cache",
+    Connection:"keep-alive"
+     });
 
-    const result = await graph.invoke({
+    const stream = await graph.stream({
       messages: [new HumanMessage(message)],
-      userId: req.body.userId,
+      userId: (req as any).user.id,
       iterations: 0,
       finalAnswer: "",
-    });
-        
-    res.json({
-      success: true,
-      answer: result.finalAnswer,
+    },
+  {
+    streamMode:"messages"
     });
 
+const nodeStatusMap: Record<string, string> = {
+  router: "Understanding request...",
+  query: "Searching...",
+  retrieval: "Retrieving documents...",
+  draft: "Generating answer...",
+  critique: "Refining answer...",
+};
+    let lastNode = "";
+    let currentDraftId = 0;
+    console.log("---- NEW REQUEST ----");
+for await(const chunk of stream){
+    const metadata = chunk[1];
+    const node = metadata?.langgraph_node;
+
+    if (node === "draft" && lastNode !== "draft") {
+        currentDraftId++;
+  console.log("NEW DRAFT STARTED -> ID:", currentDraftId);
+}
+
+if (node && node !== lastNode) {
+  const status = nodeStatusMap[node] || "Processing...";
+  const statusEvent = {
+    type: "status",
+    payload: {
+      message: status
+    }
+  };
+  res.write(`data: ${JSON.stringify(statusEvent)}\n\n`);
+  lastNode = node;
+}
+}
+res.end();
   } catch (err) {
     console.log(err);
 
-    res.status(500).json({
-      error: "Retrieval Failed",
-    });
-  }
+    res.write(`data: ${JSON.stringify({
+        type: "error",
+        payload: { message: "Something went wrong" }
+    })}\n\n`);
+
+    res.end();
+}
 }); 
 
 

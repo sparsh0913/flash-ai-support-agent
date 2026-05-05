@@ -36,7 +36,7 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
            )}
 
            {status && (
-          <div className="px-2 text-sm text-purple-300">
+          <div className="px-2 text-sm text-white-400">
               {status}
           </div>
         )}

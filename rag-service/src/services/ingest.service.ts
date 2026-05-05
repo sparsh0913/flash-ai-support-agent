@@ -24,12 +24,14 @@ export async function readPdf(filePath : string){
 
 export async function processPdf(filePath: string ,fileName:string , userId:string ){
 
+  console.log("PROCESS PDF USER ID:", userId);
   const chunks = await readPdf(filePath);
    
  const vectors = await Promise.all(
   chunks.map(async (chunk, index) => {
     const values = await embeddings.embedQuery(chunk.pageContent);
-
+ 
+     console.log("UPSERT USER ID:", userId);
     return {
       id: `${userId}-${fileName}-${index}`,
       values,

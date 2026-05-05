@@ -101,7 +101,7 @@ const response = await llmWithStructure.invoke([
 
 function shouldContinue(state: typeof GraphState.State){
 
-const MAX_ITERATIONS = 1;
+const MAX_ITERATIONS = 2;
 
 if(state.iteration >= MAX_ITERATIONS){
     return "__end__";

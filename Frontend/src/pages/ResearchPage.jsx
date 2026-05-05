@@ -91,8 +91,8 @@ useEffect(()=>{
           }
 
           if(data.type === "research"){
-   setActiveChatId(data.payload.chatId);
-}
+         setActiveChatId(data.payload.chatId);
+   }
         if(data.type === "ai"){
         const assistantMessage = {
             role:"assistant",
