@@ -18,11 +18,14 @@ export async function createChat(
 }
 
 export async function appendMessage(
-   chatId:string,
-   message:{
-      role:string,
-      content:string
-   }
+   chatId: string,
+  message: {
+    role: string;
+    content?: string;
+    type?: string;
+    fileName?: string;
+    fileUrl?: string;
+  }
 ){
 
    const updatedChat = await Chat.findByIdAndUpdate(

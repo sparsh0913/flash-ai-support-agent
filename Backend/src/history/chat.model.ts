@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const messageSchema = new mongoose.Schema(
+/* const messageSchema = new mongoose.Schema(
   {
     role: {
       type: String,
@@ -10,6 +10,36 @@ const messageSchema = new mongoose.Schema(
     content: {
       type: String,
       required: true,
+    },
+  },
+  { _id: false }
+); */
+
+const messageSchema = new mongoose.Schema(
+  {
+    role: {
+      type: String,
+      enum: ["user", "assistant"],
+      required: true,
+    },
+
+    content: {
+      type: String,
+      default: "", 
+    },
+
+    type: {
+      type: String,
+      enum: ["text", "pdf"],
+      default: "text",
+    },
+
+    fileName: {
+      type: String,
+    },
+
+    fileUrl: {
+      type: String,
     },
   },
   { _id: false }

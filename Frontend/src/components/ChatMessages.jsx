@@ -22,7 +22,21 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
             ? "bg-purple-600 text-white"
             : "bg-white/10 text-gray-200 backdrop-blur-lg"
         }`}>
-        {msg.content}
+       {msg.type === "pdf" ? (
+       <span>
+            <a
+              href={msg.fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline text-purple-400"
+            >
+              📄 {msg.fileName}
+            </a>{" "}
+            uploaded successfully. Ask anything about this PDF.
+          </span>
+        ) : (
+          msg.content
+        )}
         </div>
        </div>
         ))}

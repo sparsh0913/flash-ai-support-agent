@@ -66,29 +66,33 @@ const handleUpload = async () => {
   const formData = new FormData();
   formData.append("pdf", file);
   formData.append("userId", user?._id);
+  formData.append("chatId", activeChatId || "");
 
-  const response = await fetch("http://localhost:5001/upload", {
+  const response = await fetch("http://localhost:8080/api/vault/upload", {
     method: "POST",
+     headers: {
+      Authorization: `Bearer ${user.accessToken}`
+    },
     body: formData,
   });
 
-  console.log("Status:", response.status);
   const data = await response.json();
- console.log("Response Data:", data);
 
   if (data.success) {
     setUploaded(true);
      setFile(null);
+     setActiveChatId(data.chatId);
 
     setMessages(prev => [
-      ...prev,
-      {
-        role: "assistant",
-        content: `📄 ${file.name} uploaded successfully. Ask anything about this PDF.`
-      }
-    ]);
+  ...prev,
+  {
+    role: "assistant",
+    type: "pdf",                 
+    fileName: file.name,         
+    fileUrl: URL.createObjectURL(file) 
   }
-
+]);
+  }
   if (data.success) {
     setUploaded(true);
   }

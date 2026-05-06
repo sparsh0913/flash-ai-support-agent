@@ -3,6 +3,7 @@ import multer from "multer";
 import { readPdf } from "../services/ingest.service.js";
 import { processPdf } from "../services/ingest.service.js";
 
+
 const router = Router();
 
 const upload = multer({
@@ -14,8 +15,8 @@ router.post("/", upload.single("pdf"), async (req,res)=>{
     try{
    const file = req.file;
    const userId = req.body.userId;
+  
 
-   console.log("UPLOAD BODY:", req.body);
 console.log("UPLOAD USER ID:", req.body.userId);
 
    if(!file){

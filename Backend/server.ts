@@ -11,14 +11,15 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import graph from "./src/graph/graph.js";
 import { HumanMessage } from "@langchain/core/messages";
-import Chat from "./src/history/chat.model.js";
 import { optionalAuth ,requireAuth} from "./src/auth/middleware/auth.middleware.js";
 import { createChat , appendMessage} from "./src/history/chat.helper.js";
 import chatRoutes from "./src/history/chat.routes.js";
+import multer from "multer";
 
 /* import {agent} from "./agent.js"; */
 
 const app = express();
+const upload = multer();
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -479,6 +480,71 @@ res.end();
     res.end();
 }
 }); 
+
+//Handle pdf history----------------------------------------------------------------------------------------------
+app.post(
+  "/api/vault/upload",
+  requireAuth,
+  upload.single("pdf"),
+  async (req, res) => {
+    try {
+      const { chatId } = req.body;
+     const file = (req as any).file;
+
+      let activeChatId = chatId;
+
+      if (!activeChatId) {
+        const newChat = await createChat(
+          (req as any).user.id,
+          "vault",
+          file.originalname
+        );
+
+        activeChatId = newChat._id.toString();
+      }
+
+       await appendMessage(
+        activeChatId,
+        {
+          role: "assistant",
+          type: "pdf",
+          fileName: file.originalname,
+          fileUrl: file.originalname
+        }
+         );
+         const ragFormData = new FormData();
+
+        const blob = new Blob([file.buffer], {
+         type: file.mimetype,
+       });
+       ragFormData.append("pdf", blob, file.originalname);
+        ragFormData.append("userId", (req as any).user.id);
+
+        const ragResponse = await fetch(
+          "http://localhost:5001/upload",
+          {
+            method: "POST",
+            body: ragFormData
+          }
+        );
+
+        const ragData = await ragResponse.json();
+      res.json({
+        success: true,
+        chatId: activeChatId,
+        ragData
+      });
+
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        message: "Upload failed",
+      });
+    }
+  }
+);
 
 
   await connectDB();
