@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema =new mongoose.Schema({
+const userSchema = new mongoose.Schema({
 
     username:{
         type:String,
@@ -15,7 +15,15 @@ const userSchema =new mongoose.Schema({
       password:{
         type:String,
         required:[true,"password is required"],
-    }
+    },
+    googleCalendar: {
+   connected: {
+      type: Boolean,
+      default: false
+   },
+   accessToken: String,
+   refreshToken: String
+}
 },{
     timestamps:true
 })

@@ -3,8 +3,9 @@ import { tool } from "@langchain/core/tools";
 import * as z from "zod";
 import { google } from "googleapis";
 import { TavilySearch } from "@langchain/tavily";
+import { getGoogleCalendarClient } from "./helper/getGoogleCalendarClient.js";
 
-const oauth2Client = new google.auth.OAuth2(
+/* const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
   process.env.GOOGLE_REDIRECT_URL
@@ -17,18 +18,23 @@ oauth2Client.setCredentials({
 
  const calendar = google.calendar({version: 'v3', auth:oauth2Client});
 
+
+ */
  //get events tool
  type Params = {
     q:string,
     timeMin:string,
-    timeMax:string
+    timeMax:string,
+    userId:string;
  }
 export const getEventsTool = tool(
 
     async(params)=>{
-    const {q,timeMin,timeMax} = params as Params;
-
+    const {q,timeMin,timeMax,userId} = params as Params;
+      
         try{
+            console.log(" Get Event user id" , userId);
+         const calendar = await getGoogleCalendarClient(userId);
        const response = await calendar.events.list({
                 calendarId: 'primary',
                 q,
@@ -80,7 +86,8 @@ export const getEventsTool = tool(
          'Only use for keyword search (e.g. "standup", "interview"). OMIT this field when fetching all events for a time range.'
                              ).optional(),
         timeMin: z.string().describe('Start of time range in IST. Format: 2026-04-10T00:00:00').optional(),
-         timeMax: z.string().describe('End of time range in IST. Format: 2026-04-10T23:59:59').optional()
+         timeMax: z.string().describe('End of time range in IST. Format: 2026-04-10T23:59:59').optional(),
+         userId: z.string()
      }
     )
     }
@@ -106,24 +113,13 @@ const createEventSchema = z.object({
         attendees: z.array(z.object({
             email:z.string().describe("The email of the attendee"),
             displayName:z.string().describe("The display name of the attendee"),
-        })).min(1)
+        })).min(1),
+        userId:z.string()
 
      })
 
    type EventData =  z.infer<typeof createEventSchema>
 
-/* type EventData = {
-    summary:string;
-    start:{
-        dateTime:string;
-        timeZone:string;
-    },
-    end:{
-        dateTime:string;
-        timeZone:string;
-    },
-    attendees:attendee[];
-} */
  const stripUTCSuffix = (dt: string) => dt.endsWith('Z') ? dt.slice(0, -1) : dt;
                const normalizeTZ = (tz:string) =>
              tz === "Asia/Calcutta" ? "Asia/Kolkata" : tz;
@@ -131,7 +127,7 @@ const createEventSchema = z.object({
 export const createEventTool = tool(
 
     async(eventData)=>{
-        const {summary,start,end,attendees} = eventData as EventData;
+        const {summary,start,end,attendees,userId} = eventData as EventData;
         
                         const startDateTime = {
             dateTime: stripUTCSuffix(start.dateTime),
@@ -143,6 +139,8 @@ export const createEventTool = tool(
         };
       
         try{
+            console.log("Create event user id", userId);
+      const calendar = await getGoogleCalendarClient(userId);
      const response = await calendar.events.insert(
         {
         calendarId:'primary', 
@@ -185,9 +183,10 @@ export const createEventTool = tool(
 
 export const deleteEventTool = tool(
 
-async({eventId})=>{
+async({eventId,userId})=>{
    
     try{
+  const calendar = await getGoogleCalendarClient(userId);
     const response = await calendar.events.delete(
         {
             calendarId:'primary',
@@ -206,7 +205,8 @@ async({eventId})=>{
     name:'delete-event',
     description:'Use this tool to delete a calendar event using its eventId. Only call when user explicitly requests deletion.',
     schema: z.object({
-         eventId: z.string().describe("The Id of the event to delete")
+         eventId: z.string().describe("The Id of the event to delete"),
+         userId:z.string()
     }),
 }
 )
@@ -231,15 +231,15 @@ const updateEventSchema = z.object({
             email:z.string(),
             displayName: z.string()
         })
-     ).optional()
-     
+     ).optional(),
+      userId:z.string()
 })
 
 export const updateEventTool = tool(
 
 async(data:z.infer<typeof updateEventSchema>)=>{
      
-    const {eventId , ...updates} = data;
+    const {eventId ,userId,...updates} = data;
     if (updates.start) {
     updates.start = {
         dateTime: stripUTCSuffix(updates.start.dateTime),
@@ -253,6 +253,7 @@ if (updates.end) {
     };
 }
     try{
+        const calendar = await getGoogleCalendarClient(userId);
     const response = await calendar.events.patch(
         {
             calendarId:'primary',

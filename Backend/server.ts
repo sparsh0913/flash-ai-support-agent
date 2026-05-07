@@ -15,6 +15,8 @@ import { optionalAuth ,requireAuth} from "./src/auth/middleware/auth.middleware.
 import { createChat , appendMessage} from "./src/history/chat.helper.js";
 import chatRoutes from "./src/history/chat.routes.js";
 import multer from "multer";
+import userModel from "./src/auth/models/user.model.js";
+import jwt from "jsonWebtoken";
 
 /* import {agent} from "./agent.js"; */
 
@@ -39,16 +41,14 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 app.get("/auth",(req,res)=>{
-
+  const token = req.query.token as string;
 const scopes = ['https://www.googleapis.com/auth/calendar']; //the permission we want from user
 const url = oauth2Client.generateAuthUrl({
-  // 'online' (default) or 'offline' (gets refresh_token)
-  access_type: 'offline',
-  prompt:'consent',
-
-  // If you only need one scope, you can pass it as a string
-  scope: scopes
-});
+   access_type:"offline",
+   prompt:"consent",
+   scope: scopes,
+   state: token
+})
    console.log("url", url);
     res.redirect(url);
 })
@@ -61,16 +61,31 @@ app.get("/callback", async (req,res)=>{
     const {tokens} = await oauth2Client.getToken(code);
     console.log(tokens);
 
-    process.env.GOOGLE_ACCESS_TOKEN = tokens.access_token!;
-    process.env.GOOGLE_REFRESH_TOKEN = tokens.refresh_token!;
+  /*   const userId = req.query.state as string; */
+        const token = req.query.state as string;
 
-    res.send("Connected! You can close this tab now.")
+      const decoded:any = jwt.verify(
+          token,
+          process.env.JWT_SECRET!
+      );
 
+      const userId = decoded.id;
+      console.log("USER ID:", userId);
+
+    await userModel.findByIdAndUpdate(userId,{
+   googleCalendar:{
+      connected:true,
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token
+   }
+})
+
+   res.redirect("http://localhost:5173/chat?connected=true");
 })
 
 
 //calendar agent------------------------------------------------------------------------------------------------------------
-app.post("/chat" , async(req,res)=>{
+app.post("/chat" ,requireAuth, async(req,res)=>{
 
   const timeZoneString = "Asia/Kolkata";
 const now = new Date();
@@ -123,6 +138,7 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
                                     - Do not omit required fields
                                     - Use ISO datetime format
                             `
+
         const result = await agent.invoke(
             {
             messages:[
@@ -134,7 +150,8 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
                     role:'user',
                     content:message,
                 }
-            ]
+            ],
+            userId:(req as any).user.id,
         },{
             configurable:{thread_id:'1'}
         }
