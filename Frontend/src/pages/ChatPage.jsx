@@ -10,12 +10,12 @@ export default function ChatPage({ user , setUser}) {
       const [input , setInput] = useState("");
       const [loading, setLoading] = useState(false);
       const messageEndRef = useRef(null);
+      const isCalendarConnected = user?.googleCalendar?.connected;
     
     
     const handleSend =  async ()=>{
     
     if(!input.trim()) return;
-    
     const userMessage = 
       {
         role:'user',
@@ -30,13 +30,13 @@ export default function ChatPage({ user , setUser}) {
        
       method:"POST",
       headers:{
-        "content-type": "application/JSON"
+        "content-type": "application/JSON",
+        Authorization:`Bearer ${user.accessToken}`
       },
       body : JSON.stringify({
         message:input,
       })
       });
-    
       const data = await response.json();
       console.log(data);
     
@@ -45,7 +45,6 @@ export default function ChatPage({ user , setUser}) {
         content:data.reply
       };
       setLoading(false);
-    
       setMessages((prev)=>[...prev,assistantMessage]);
     
     }
@@ -53,6 +52,18 @@ export default function ChatPage({ user , setUser}) {
     useEffect(()=>{
      messageEndRef.current?.scrollIntoView({behavior:"smooth"})
     },[messages])
+
+    useEffect(() => {
+
+const params = new URLSearchParams(window.location.search);
+
+const connected = params.get("connected");
+
+if (connected === "true") {
+   window.location.reload();
+}
+
+}, []);
     
   return (
     <>
@@ -63,12 +74,59 @@ export default function ChatPage({ user , setUser}) {
            <div className="padding-4 border-b border-purple-900/40">
                   <Header user={user} setUser={setUser} />
            </div>
-           <ChatMessages
+          {/*  <ChatMessages
            messages={messages}
             messageEndRef={messageEndRef}
             loading={loading}/>
     
-           <ChatInput input={input} setInput={setInput} handleSend={handleSend}/>
+           <ChatInput input={input} setInput={setInput} handleSend={handleSend}/> */}
+           {
+ !isCalendarConnected ? (
+
+<div className="flex-1 flex items-center justify-center">
+
+<div className="bg-[#14061f] border border-purple-500/20 rounded-3xl p-8 max-w-md w-full text-center">
+
+<h2 className="text-2xl font-bold mb-4">
+ Connect Google Calendar
+</h2>
+
+<p className="text-gray-400 mb-6">
+ Connect your calendar to schedule meetings,
+ check events, manage availability,
+ and use Calendar AI features.
+</p>
+
+<button
+ onClick={() => {
+   window.location.href =
+`http://localhost:8080/auth?token=${user.accessToken}`;
+ }}
+ className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-2xl font-medium transition-all"
+>
+ Connect Calendar
+</button>
+</div>
+</div>
+
+ ) : (
+
+<>
+<ChatMessages
+ messages={messages}
+ messageEndRef={messageEndRef}
+ loading={loading}
+/>
+
+<ChatInput
+ input={input}
+ setInput={setInput}
+ handleSend={handleSend}
+/>
+</>
+
+)
+}
            </div>
             </div>
         </>
