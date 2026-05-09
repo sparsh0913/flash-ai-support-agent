@@ -5,21 +5,7 @@ import { google } from "googleapis";
 import { TavilySearch } from "@langchain/tavily";
 import { getGoogleCalendarClient } from "./helper/getGoogleCalendarClient.js";
 
-/* const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URL
-);
 
-oauth2Client.setCredentials({
-    access_token:process.env.GOOGLE_ACCESS_TOKEN,
-    refresh_token:process.env.GOOGLE_REFRESH_TOKEN
-});
-
- const calendar = google.calendar({version: 'v3', auth:oauth2Client});
-
-
- */
  //get events tool
  type Params = {
     q:string,
@@ -33,7 +19,6 @@ export const getEventsTool = tool(
     const {q,timeMin,timeMax,userId} = params as Params;
       
         try{
-            console.log(" Get Event user id" , userId);
          const calendar = await getGoogleCalendarClient(userId);
        const response = await calendar.events.list({
                 calendarId: 'primary',

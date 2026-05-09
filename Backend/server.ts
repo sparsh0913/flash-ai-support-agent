@@ -42,7 +42,7 @@ const oauth2Client = new google.auth.OAuth2(
 
 app.get("/auth",(req,res)=>{
   const token = req.query.token as string;
-const scopes = ['https://www.googleapis.com/auth/calendar']; //the permission we want from user
+const scopes = ['https://www.googleapis.com/auth/calendar']; 
 const url = oauth2Client.generateAuthUrl({
    access_type:"offline",
    prompt:"consent",
@@ -91,10 +91,46 @@ app.post("/chat" ,requireAuth, async(req,res)=>{
 const now = new Date();
 const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).replace(' ', 'T');
     try{
-        const {message} = req.body;
+        const {message,chatId} = req.body;
         if(!message){
             return res.status(404).json({error: "Message is required"})
         }
+
+    res.writeHead(200,{
+    "Content-Type":"text/event-stream",
+    "Cache-Control":"no-cache",
+    Connection:"keep-alive"
+     });
+       let activeChatId = chatId;
+
+     
+      if ((req as any).user && !activeChatId) {
+
+         const newChat = await createChat(
+            (req as any).user.id,
+            "calendar",
+            message
+         );
+
+         activeChatId = newChat._id.toString();
+
+         const chatEvent = {
+            type: "calendar",
+            payload: {
+               chatId: activeChatId
+            }
+         };
+
+         res.write(`data: ${JSON.stringify(chatEvent)}\n\n`);
+      }
+
+      if (activeChatId) {
+         await appendMessage(activeChatId, {
+            role: "user",
+            content: message
+         });
+      }
+
        const systemPrompt =  `
                         You are a smart AI assistant with tool-calling abilities.
 
@@ -139,7 +175,7 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
                                     - Use ISO datetime format
                             `
 
-        const result = await agent.invoke(
+        const stream = await agent.stream(
             {
             messages:[
                 {
@@ -152,15 +188,69 @@ const todayLocal = now.toLocaleString('sv-SE', { timeZone: timeZoneString }).rep
                 }
             ],
             userId:(req as any).user.id,
+
         },{
+          streamMode:["messages"],
             configurable:{thread_id:'1'}
         }
     );
 
-    const reply = result.messages[result.messages.length -1].content;
+    const toolStatusMap:Record<string,string> = {
+   "get-events":"Getting your events...",
+   "create-event":"Creating your meeting...",
+   "delete-event":"Deleting your event...",
+   "update-event":"Updating your event..."
+}
+         let fullResponse = "";
+    for await(const chunk of stream){
+      const messageChunk:any = chunk[1][0];
+      const toolCalls = messageChunk?.tool_calls;
+      
+      if(toolCalls?.length){
 
-    res.send({reply});
+   const toolName = toolCalls[0].name;
+   const status = toolStatusMap[toolName];
 
+   if(status){
+      const statusEvent = {
+         type:"status",
+         payload:{
+            message:status
+         }
+      };
+       
+      res.write(`data: ${JSON.stringify(statusEvent)}\n\n`);
+   }
+}
+
+const content = messageChunk?.content;
+
+if(
+   typeof content === "string" &&
+   content.trim() &&
+   content !== "[]"
+){
+   fullResponse += content;
+
+   const responseEvent = {
+      type:"response",
+      payload:{
+         content
+      }
+   };
+
+   res.write(`data: ${JSON.stringify(responseEvent)}\n\n`);
+}
+    }
+     if (activeChatId) {
+
+         await appendMessage(activeChatId, {
+            role: "assistant",
+            content: fullResponse
+         });
+      }
+res.end();
+  
     }catch(error){
         console.log("error:" , error);
         res.status(500).json({error:"something went wrong"});
@@ -444,19 +534,6 @@ for await(const chunk of stream){
         currentDraftId++;
 }
 
-/* if (node === "critique" && content) {
-  const text =
-    typeof content === "string"
-      ? content
-      : JSON.stringify(content);
-
-  if (text.toLowerCase().includes("done")) {
-    isFinal = true;
-  }
-}
- */
-
-
 if (node && node !== lastNode) {
   const status = nodeStatusMap[node] || "Processing...";
   const statusEvent = {
@@ -485,7 +562,6 @@ if (activeChatId) {
   });
 }
 
-res.end();
 res.end();
   } catch (err) {
     console.log(err);

@@ -55,7 +55,7 @@ const chatSchema = new mongoose.Schema(
 
     mode: {
       type: String,
-      enum: ["vault", "research", "manager", "chat"],
+      enum: ["vault", "research", "calendar", "chat"],
       required: true,
     },
 

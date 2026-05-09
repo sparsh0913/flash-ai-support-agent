@@ -102,7 +102,6 @@ export async function login(req:Request, res:Response){
 }
 
 const user = await userModel.findOne({email});
-
 if (!user) {
   return res.status(401).json({
     message: "Invalid email or password"
@@ -158,11 +157,7 @@ res.cookie("refreshToken", refreshToken, {
 
 return res.status(200).json({
   message: "Login successful",
-  user: {
-    id: user._id,
-    username: user.username,
-    email: user.email
-  },
+  user,
   accessToken
 });
   } catch (err) {
@@ -175,9 +170,17 @@ return res.status(200).json({
 }
 
 export async function getMe(req: Request, res: Response) {
-  return res.status(200).json({
+ /*  return res.status(200).json({
     user: (req as any).user
-  });
+  }); */
+
+    const dbUser = await userModel.findById(
+   (req as any).user.id
+);
+
+   return res.status(200).json({
+      user: dbUser
+   });
 }
 
 export async function logout(req: Request, res: Response){
