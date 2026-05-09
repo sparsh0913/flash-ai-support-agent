@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import ChatMessages from "./components/ChatMessages";
 import ChatInput from "./components/ChatInput";
@@ -97,4 +97,4 @@ const router = createBrowserRouter(
   
 }
 
-export default App
+export default App;
