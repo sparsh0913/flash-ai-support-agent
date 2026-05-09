@@ -24,7 +24,7 @@ const app = express();
 const upload = multer();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true
   })
 );
@@ -80,7 +80,7 @@ app.get("/callback", async (req,res)=>{
    }
 })
 
-   res.redirect("http://localhost:5173/chat?connected=true");
+   res.redirect(`${process.env.FRONTEND_URL}/chat?connected=true`);
 })
 
 
@@ -614,7 +614,7 @@ app.post(
         ragFormData.append("userId", (req as any).user.id);
 
         const ragResponse = await fetch(
-          "http://localhost:5001/upload",
+          "https://flash-ai-support-agent.onrender.com/upload",
           {
             method: "POST",
             body: ragFormData

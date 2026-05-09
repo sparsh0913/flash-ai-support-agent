@@ -6,7 +6,7 @@ export async function retrievalTool(
 ) {
   try {
     const { data } = await axios.post(
-      "http://localhost:5001/search",
+      "https://flash-ai-support-agent.onrender.com/search",
       {
         queries,
         userId,
