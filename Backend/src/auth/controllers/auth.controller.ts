@@ -70,10 +70,10 @@ const accessToken = jwt.sign({
 )
 
 res.cookie("refreshToken" , refreshToken, {
-    httpOnly:true, //on client side , js will not be able to read data inside cookies
-    secure:false,
-    sameSite:"lax",
-    maxAge:7*24*60*60*1000 //7 days
+   httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 7 * 24 * 60 * 60 * 1000
 })
 
 res.status(201).json({
@@ -149,9 +149,9 @@ const accessToken = jwt.sign(
 );
 
 res.cookie("refreshToken", refreshToken, {
-  httpOnly: true,
-  secure: false,
-  sameSite: "lax",
+httpOnly: true,
+  secure: true,
+  sameSite: "none",
   maxAge: 7 * 24 * 60 * 60 * 1000
 });
 
@@ -272,10 +272,10 @@ session.refreshTokenHash = newRefreshTokenHash;
 await session.save();
 
 res.cookie("refreshToken",newRefreshToken,{
-    httpOnly:true,
-    secure:false,
-    sameSite:"lax",
-    maxAge: 7*24*60*60*1000
+   httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 7 * 24 * 60 * 60 * 1000
 })
 
 res.status(200).json({
