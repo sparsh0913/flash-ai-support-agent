@@ -139,19 +139,6 @@ const handleUpload = async () => {
       if (data.type === "status") {
         setStatus(data.payload.message);
       }
-
-    /*   if (data.type === "final") {
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "assistant",
-      content: data.payload,
-    },
-  ]);
-  setStatus("");       
-  setLoading(false);
-} */
-
   if (data.type === "final") {
   setStatus("");
   setLoading(false);

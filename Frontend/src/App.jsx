@@ -75,10 +75,9 @@ const router = createBrowserRouter(
       );
 
       if (!response.ok) return;
-
+     
       const data = await response.json();
 
-     /*  setUser(data.user); */
             setUser({
         ...data.user,
         accessToken: token
@@ -92,7 +91,8 @@ const router = createBrowserRouter(
   checkUser();
 }, []);
 
-    return <RouterProvider router={router} />;
+
+   return <RouterProvider router={router} />;
   
 }
 

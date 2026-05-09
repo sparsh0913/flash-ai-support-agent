@@ -16,7 +16,13 @@ export default function Sidebar({user,chats,setActiveChatId,activeChatId}){
 
 
               <div className="mt-6 text-gray-400 text-xs">MODES</div>
-              <div onClick={() => navigate("/chat")} 
+              <div onClick={() => {
+                 if(!user) {
+                  navigate("/login");
+                  return;
+                  } 
+                    navigate("/chat");
+                  }} 
                 className={`mt-2 p-3 rounded-xl cursor-pointer
                 border transition-all text-white font-medium text-base
                 ${

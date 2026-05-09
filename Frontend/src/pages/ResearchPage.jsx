@@ -93,16 +93,6 @@ const handleSend =  async ()=>{
           if(data.type === "research"){
          setActiveChatId(data.payload.chatId);
    }
-        /* if(data.type === "ai"){
-        const assistantMessage = {
-            role:"assistant",
-            content:data.payload.text
-        }
-        setMessages((prev)=>[...prev , assistantMessage]);
-        setStatus("");
-        setLoading(false);
-       } */
-
         if(data.type === "ai"){
           setStatus("");
           setLoading(false);
