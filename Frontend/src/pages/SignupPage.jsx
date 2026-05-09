@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function SignupPage() {
 
@@ -30,7 +31,10 @@ const handleSignup = async (e) => {
     console.log(data);
 
     if (response.ok) {
+  toast.success("Account created")
    navigate("/login");
+}else{
+   toast.error(data.message);
 }
 
   } catch (error) {

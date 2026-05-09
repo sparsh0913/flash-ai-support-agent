@@ -1,4 +1,4 @@
-export default function ChatInput({ input, setInput, handleSend ,  setFile, vaultMode, file}){
+export default function ChatInput({ input, setInput, handleSend ,  setFile, vaultMode, file,uploading}){
 
   const handleKeyDown = (e)=>{
     if(e.key === 'Enter'){
@@ -30,6 +30,7 @@ export default function ChatInput({ input, setInput, handleSend ,  setFile, vaul
 
 {file && (
   <button
+  disabled={uploading}
     onClick={() => window.open(URL.createObjectURL(file), "_blank")}
     className="mr-3 text-sm text-purple-300 hover:text-white underline"
   >
@@ -38,6 +39,7 @@ export default function ChatInput({ input, setInput, handleSend ,  setFile, vaul
 )}
 
     <input
+    disabled={uploading}
       type="text"
       placeholder="Ask anything..."
       value={input}
@@ -46,9 +48,13 @@ export default function ChatInput({ input, setInput, handleSend ,  setFile, vaul
       className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
     />
 
-    <button className="ml-3 bg-purple-600 hover:bg-purple-500 transition px-4 py-2 rounded-xl" onClick={handleSend}>
-      Send
-       </button>
+   <button
+  disabled={uploading}
+  onClick={handleSend}
+  className="ml-3 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition px-4 py-2 rounded-xl"
+>
+  {uploading ? "Uploading..." : "Send"}
+</button>
 
     </div>
    </div>

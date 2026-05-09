@@ -1,15 +1,18 @@
 import { BeatLoader } from "react-spinners";
+import EmptyState from "./EmptyState";
 
-export default function StateMessages({ messages, messageEndRef ,loading, status}){
+export default function StateMessages({ messages, messageEndRef ,loading, status,mode}){
 
     return(
-
         <div className="flex-1 p-6  overflow-y-auto space-y-4 pb-32">
+
+            {messages.length === 0 && (
+              <EmptyState mode={mode} />
+            )}
         <div className="max-w-3xl mx-auto space-y-4">
 
        {
         messages.map((msg,index)=>(
-
        <div
             key={index}
               className={`flex ${

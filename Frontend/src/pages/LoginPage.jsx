@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function LoginPage({ setUser }) {
     const navigate = useNavigate();
@@ -25,16 +26,18 @@ function LoginPage({ setUser }) {
 
     const data = await response.json();
 
-    console.log(data);
-
     if (response.ok) {
+       toast.success("Login successful");
        setUser({ 
         ...data.user,
    accessToken: data.accessToken});
       navigate("/");
-    }
+    }else{
+   toast.error(data.message);
+}
 
   } catch (error) {
+    toast.error("Something went wrong");
     console.log(error);
   }
 };

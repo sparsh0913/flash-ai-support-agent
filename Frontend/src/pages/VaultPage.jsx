@@ -5,6 +5,7 @@ import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import toast from "react-hot-toast";
 
 export default function VaultPage({ user , setUser}) {
       const [messages,setMessages] = useState([]);
@@ -16,6 +17,8 @@ export default function VaultPage({ user , setUser}) {
       const [chats, setChats] = useState([]);
        const [activeChatId, setActiveChatId] = useState(null);
       const messageEndRef = useRef(null);
+      const [selectedFile, setSelectedFile] = useState(null);
+      const [uploading, setUploading] = useState(false);
        const navigate = useNavigate();
     
  const fetchChats = async()=>{
@@ -62,40 +65,61 @@ useEffect(()=>{
 
 
 const handleUpload = async () => {
-  if (!file) return;
-  const formData = new FormData();
-  formData.append("pdf", file);
-  formData.append("userId", user?._id);
-  formData.append("chatId", activeChatId || "");
 
-  const response = await fetch("http://localhost:8080/api/vault/upload", {
-    method: "POST",
-     headers: {
-      Authorization: `Bearer ${user.accessToken}`
-    },
-    body: formData,
-  });
+   if (!file) return;
+   setUploading(true);
+   setInput("");
+   const toastId = toast.loading("Uploading PDF...");
 
-  const data = await response.json();
+   try {
+      const formData = new FormData();
+      formData.append("pdf", file);
+      formData.append("userId", user?._id);
+      formData.append("chatId", activeChatId || "");
 
-  if (data.success) {
-    setUploaded(true);
-     setFile(null);
-     setActiveChatId(data.chatId);
+      const response = await fetch(
+         "http://localhost:8080/api/vault/upload",
+         {
+            method: "POST",
+            headers: {
+               Authorization: `Bearer ${user.accessToken}`
+            },
+            body: formData,
+         }
+      );
 
-    setMessages(prev => [
-  ...prev,
-  {
-    role: "assistant",
-    type: "pdf",                 
-    fileName: file.name,         
-    fileUrl: URL.createObjectURL(file) 
-  }
-]);
-  }
-  if (data.success) {
-    setUploaded(true);
-  }
+      const data = await response.json();
+
+      if (data.success) {
+         toast.success("PDF uploaded successfully", {
+            id: toastId
+         });
+
+         setUploaded(true);
+         setFile(null);
+         setActiveChatId(data.chatId);
+         setMessages(prev => [
+            ...prev,
+            {
+               role: "assistant",
+               type: "pdf",
+               fileName: file.name,
+               fileUrl: URL.createObjectURL(file)
+            }
+         ]);
+      } else {
+         toast.error(data.message || "Upload failed", {
+            id: toastId
+         });
+      }
+   } catch (error) {
+      toast.error("PDF upload failed", {
+         id: toastId
+      });
+      console.log(error);
+   } finally {
+      setUploading(false);
+   }
 };
     
     const handleSend =  async ()=>{
@@ -167,7 +191,14 @@ const handleUpload = async () => {
     <>
           <div className="h-screen flex bg-[#05010a] text-white relative">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-purple-800/10 blur-3xl"></div>
-             <Sidebar user={user} chats={chats} setActiveChatId={setActiveChatId}  activeChatId={activeChatId}/>
+             <Sidebar  user={user}
+            chats={chats}
+            setActiveChatId={setActiveChatId}
+            activeChatId={activeChatId}
+            setMessages={setMessages}
+            setInput={setInput}
+            setStatus={setStatus}/>
+
               <div className="flex-1 relative z-10 flex flex-col">
            <div className="padding-4 border-b border-purple-900/40">
                   <Header user={user} setUser={setUser} />
@@ -176,7 +207,8 @@ const handleUpload = async () => {
            messages={messages}
             messageEndRef={messageEndRef}
             loading={loading}
-             status={status}/>
+             status={status}
+             mode="vault"/>
            
 
     
@@ -188,6 +220,7 @@ const handleUpload = async () => {
                 setFile={setFile}
                 vaultMode={true}
                 file={file}
+                  uploading={uploading}
                 />
            </div>
             </div>

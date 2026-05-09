@@ -158,7 +158,15 @@ if (connected === "true") {
     <>
           <div className="h-screen flex bg-[#05010a] text-white relative">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-purple-800/10 blur-3xl"></div>
-             <Sidebar user={user} chats={chats} setActiveChatId={setActiveChatId}  activeChatId={activeChatId}/>
+         <Sidebar
+            user={user}
+            chats={chats}
+            setActiveChatId={setActiveChatId}
+            activeChatId={activeChatId}
+            setMessages={setMessages}
+            setInput={setInput}
+            setStatus={setStatus}
+          />
               <div className="flex-1 relative z-10 flex flex-col">
            <div className="padding-4 border-b border-purple-900/40">
                   <Header user={user} setUser={setUser} />
@@ -171,6 +179,7 @@ if (connected === "true") {
  messageEndRef={messageEndRef}
  loading={loading}
  status={status}
+   mode="manager"
 />
 
 <ChatInput

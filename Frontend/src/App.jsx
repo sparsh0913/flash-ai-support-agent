@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import VaultPage from "./pages/VaultPage";
+import { Toaster } from "react-hot-toast";
 
 
 function App() {
