@@ -197,7 +197,8 @@ const handleUpload = async () => {
             activeChatId={activeChatId}
             setMessages={setMessages}
             setInput={setInput}
-            setStatus={setStatus}/>
+            setStatus={setStatus}
+            setChats={setChats}/>
 
               <div className="flex-1 relative z-10 flex flex-col">
            <div className="padding-4 border-b border-purple-900/40">

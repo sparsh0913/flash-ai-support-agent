@@ -17,8 +17,6 @@ router.post("/", upload.single("pdf"), async (req,res)=>{
    const userId = req.body.userId;
   
 
-console.log("UPLOAD USER ID:", req.body.userId);
-
    if(!file){
     return res.status(400).json({
         success:false,
@@ -29,8 +27,6 @@ console.log("UPLOAD USER ID:", req.body.userId);
    if (!userId) {
       return res.status(400).json({ success:false, message:"No userId" });
     }
-
-    console.log(userId);
 
    const result = await processPdf(
   file.path,

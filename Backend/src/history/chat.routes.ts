@@ -23,13 +23,10 @@ router.get("/chats", requireAuth, async(req,res)=>{
       });
 
    }catch(error){
-
       console.log(error);
-
       res.status(500).json({
          error:"Failed to fetch chats"
       });
-
    }
 });
 
@@ -47,20 +44,43 @@ router.get("/chats/:chatId", requireAuth , async(req,res)=>{
                 error:"Chat not found"
             });
         }
-
         res.json({
             chat
         });
 
     }catch(error){
-
         console.log(error);
-
         res.status(500).json({
             error:"Failed to fetch chat"
         });
 
     }
+});
 
+router.delete("/chats/:chatId", requireAuth, async (req, res) => {
+
+  try {
+    const chat = await Chat.findOne({
+      _id: req.params.chatId,
+      userId: (req as any).user._id,
+    });
+
+    if (!chat) {
+      return res.status(404).json({
+        error: "Chat not found",
+      });
+    }
+    await Chat.findByIdAndDelete(req.params.chatId);
+
+    res.json({
+      message: "Chat deleted successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: "Failed to delete chat",
+    });
+  }
 });
 export default router;

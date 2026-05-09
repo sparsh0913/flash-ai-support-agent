@@ -1,5 +1,8 @@
 import { BeatLoader } from "react-spinners";
 import EmptyState from "./EmptyState";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
 
 export default function StateMessages({ messages, messageEndRef ,loading, status,mode}){
 
@@ -38,8 +41,14 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
             uploaded successfully. Ask anything about this PDF.
           </span>
         ) : (
-          msg.content
-        )}
+ <div className="prose prose-invert max-w-none">
+  <ReactMarkdown
+    rehypePlugins={[rehypeHighlight]}
+  >
+    {msg.content}
+  </ReactMarkdown>
+</div>
+)}
         </div>
        </div>
         ))}
