@@ -18,7 +18,7 @@ export default function ResearchPage({ user , setUser}) {
                   
  const fetchChats = async()=>{
    try{
-      const response = await fetch("http://localhost:8080/api/chats?mode=research",{
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=research`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
@@ -34,7 +34,7 @@ const fetchChatMessages = async(chatId) => {
   try{
     
     const response = await fetch(
-        `http://localhost:8080/api/chats/${chatId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
@@ -59,7 +59,7 @@ useEffect(()=>{
 },[user]);
 
 const handleSend =  async ()=>{
-
+      let currentChatId = activeChatId;
         if(!input.trim()) return;
         const userMessage = 
           {
@@ -70,10 +70,9 @@ const handleSend =  async ()=>{
           setInput("");
         
           setLoading(true);
-          await fetchEventSource("http://localhost:8080/api/research",{
 
+          await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/api/research`,{
           method:"POST",
-
           headers:{
             "Content-Type":"application/json",
             Authorization:`Bearer ${user.accessToken}`
@@ -90,15 +89,23 @@ const handleSend =  async ()=>{
            setStatus(data.payload.message);
           }
 
-          if(data.type === "research"){
+         /*  if(data.type === "research"){
          setActiveChatId(data.payload.chatId);
-   }
+   } */
+
+         if(data.type === "research"){
+    currentChatId = data.payload.chatId;
+    setActiveChatId(currentChatId);
+}
         if(data.type === "ai"){
           setStatus("");
           setLoading(false);
 
-          if(activeChatId){
+          /* if(activeChatId){
             fetchChatMessages(activeChatId);
+          } */
+          if(currentChatId){
+              fetchChatMessages(currentChatId);
           }
 }
         }})

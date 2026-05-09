@@ -52,7 +52,7 @@ const router = createBrowserRouter(
   const checkUser = async () => {
     try {
       const refreshResponse = await fetch(
-        "http://localhost:8080/api/auth/refreshToken",
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/refreshToken`,
         {
           credentials: "include",
         }
@@ -67,7 +67,7 @@ const router = createBrowserRouter(
       const token = refreshData.accessToken;
 
       const response = await fetch(
-        "http://localhost:8080/api/auth/me",
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/me`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

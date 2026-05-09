@@ -17,7 +17,7 @@ export default function ChatPage({ user , setUser}) {
 
       const fetchChats = async()=>{
    try{
-      const response = await fetch("http://localhost:8080/api/chats?mode=chat",{
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=chat`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
@@ -34,7 +34,7 @@ const fetchChatMessages = async(chatId) => {
 try{
     
     const response = await fetch(
-        `http://localhost:8080/api/chats/${chatId}`,
+       `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
@@ -71,7 +71,7 @@ useEffect(()=>{
       setInput("");
       setLoading(true);
       console.log("user.token is",user.accessToken)
-    await fetchEventSource("http://localhost:8080/", {
+    await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/`, {
       method: "POST",
 
   headers: {

@@ -2,6 +2,12 @@
   "name": "rag-service",
   "version": "1.0.0",
   "type": "module",
+
+   "scripts": {
+    "dev": "tsx src/index.ts",
+    "start": "tsx src/index.ts"
+  },
+  
   "dependencies": {
     "@huggingface/inference": "^4.0.5",
     "@langchain/community": "^0.3.51",

@@ -23,7 +23,7 @@ export default function VaultPage({ user , setUser}) {
     
  const fetchChats = async()=>{
    try{
-      const response = await fetch("http://localhost:8080/api/chats?mode=vault",{
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=vault`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
@@ -39,7 +39,7 @@ const fetchChatMessages = async(chatId) => {
   try{
     
     const response = await fetch(
-        `http://localhost:8080/api/chats/${chatId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
@@ -78,7 +78,7 @@ const handleUpload = async () => {
       formData.append("chatId", activeChatId || "");
 
       const response = await fetch(
-         "http://localhost:8080/api/vault/upload",
+         `${import.meta.env.VITE_BACKEND_URL}/api/vault/upload`,
          {
             method: "POST",
             headers: {
@@ -142,7 +142,7 @@ const handleUpload = async () => {
       setInput("");
       setLoading(true);
 
-      await fetchEventSource("http://localhost:8080/api/retrieval", {
+      await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/api/retrieval`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

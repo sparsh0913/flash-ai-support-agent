@@ -21,7 +21,7 @@ export default function ChatPage({ user , setUser}) {
 
         const fetchChats = async()=>{
    try{
-      const response = await fetch("http://localhost:8080/api/chats?mode=calendar",{
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
@@ -37,7 +37,7 @@ const fetchChatMessages = async(chatId) => {
   try{
     
     const response = await fetch(
-        `http://localhost:8080/api/chats/${chatId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
@@ -74,7 +74,7 @@ useEffect(()=>{
       setMessages((prev)=>[...prev , userMessage]);
       setInput("");
       setLoading(true);
-      await fetchEventSource("http://localhost:8080/chat",{
+      await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/chat`,{
        
       method:"POST",
       headers:{
@@ -209,7 +209,7 @@ if (connected === "true") {
 <button
  onClick={() => {
    window.location.href =
-`http://localhost:8080/auth?token=${user.accessToken}`;
+`${import.meta.env.VITE_BACKEND_URL}/auth?token=${user.accessToken}`;
  }}
  className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-2xl font-medium transition-all"
 >

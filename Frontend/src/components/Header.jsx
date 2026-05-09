@@ -9,7 +9,7 @@ export default function Header({ user,setUser }){
 const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
   const handleLogout = async () => {
-  const response = await fetch("http://localhost:8080/api/auth/logout", {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
     method: "POST",
     credentials: "include"
   });

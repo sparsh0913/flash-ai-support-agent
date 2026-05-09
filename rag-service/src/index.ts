@@ -19,7 +19,7 @@ app.get("/health", (req, res) => {
 app.use("/upload", uploadRoute);
 app.use("/search" , searchRoute);
 
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
 
 const server = app.listen(PORT, () => {
   console.log(`RAG service running on port ${PORT}`);

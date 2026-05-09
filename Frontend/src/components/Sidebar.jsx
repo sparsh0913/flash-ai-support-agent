@@ -20,7 +20,7 @@ const handleDeleteChat = async (chatId) => {
  console.log("chatid",chatId);
   try {
     const response = await fetch(
-      `http://localhost:8080/api/chats/${chatId}`,
+     `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
       {
         method: "DELETE",
         headers: {
