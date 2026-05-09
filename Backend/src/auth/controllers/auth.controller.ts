@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import userModel from "../models/user.model.js";
 import sessionModel from "../models/session.model.js";
 import crypto from "crypto";
-import jwt from "jsonWebtoken";
+import jwt from "jsonwebtoken";
 import { config } from "../../config/env.js";
 import cookieParser from "cookie-parser";
 

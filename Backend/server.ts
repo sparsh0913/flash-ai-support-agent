@@ -16,7 +16,7 @@ import { createChat , appendMessage} from "./src/history/chat.helper.js";
 import chatRoutes from "./src/history/chat.routes.js";
 import multer from "multer";
 import userModel from "./src/auth/models/user.model.js";
-import jwt from "jsonWebtoken";
+import jwt from "jsonwebtoken";
 
 /* import {agent} from "./agent.js"; */
 
