@@ -40,23 +40,23 @@ const handleDeleteChat = async (chatId) => {
 };
     {/* sidebar */}
     return(
-                          <div
-                      className={`
-                        fixed md:relative
-                        top-0 left-0
-                        h-screen w-64
-                        flex flex-col
-                        border-r border-purple-900/40
-                        p-4 bg-black/95 md:bg-black/40
-                        backdrop-blur-lg
-                        z-50
-                        transform transition-transform duration-300
+            <div
+          className={`
+            fixed md:relative
+            top-0 left-0
+            h-screen w-64
+            flex flex-col
+            border-r border-purple-900/40
+            p-4 bg-black/95 md:bg-black/40
+            backdrop-blur-lg
+            z-50
+            transition-transform duration-300
 
-                        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+            md:translate-x-0
 
-                        md:translate-x-0
-                      `}
-                    >
+            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          `}
+        >
                 <div className="mb-6">
                 <button onClick={handleNewChat}
                 className="w-full bg-purple-600 hover:bg-purple-500 transition py-2 rounded-xl">

@@ -14,7 +14,7 @@ export default function ChatPage({ user , setUser}) {
       const messageEndRef = useRef(null);
       const [chats,setChats] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
 
       const fetchChats = async()=>{
    try{
