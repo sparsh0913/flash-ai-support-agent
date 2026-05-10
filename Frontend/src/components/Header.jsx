@@ -24,7 +24,7 @@ const [showProfile, setShowProfile] = useState(false);
 };
 return(
 <>
-    <div className="flex items-center justify-between px-6 py-4 border-b border-purple-900/30 bg-black/20 backdrop-blur-lg">
+   <div className="flex items-center justify-between pl-16 md:pl-6 pr-6 py-4 border-b border-purple-900/30 bg-black/20 backdrop-blur-lg">
   
   {/* Left Section */}
   <div className="flex items-center gap-3">
@@ -80,12 +80,14 @@ return(
         >
           Profile
         </button>
+
                 <button
           onClick={handleLogout}
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition text-red-400"
         >
           Logout
         </button>
+
         <button
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition"
         >
