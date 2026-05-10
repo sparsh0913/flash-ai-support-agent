@@ -154,7 +154,7 @@ useEffect(()=>{
             setIsSidebarOpen={setIsSidebarOpen}
             />
              <div className="flex-1 relative z-10 flex flex-col">
-       <div className="p-4 border-b border-purple-900/40 flex items-center gap-4">
+       <div className="p-4 flex items-center gap-4">
 
               <button
                 className="md:hidden text-2xl"
