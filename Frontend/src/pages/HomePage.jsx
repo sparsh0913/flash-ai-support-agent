@@ -153,16 +153,14 @@ useEffect(()=>{
             isSidebarOpen={isSidebarOpen}
             setIsSidebarOpen={setIsSidebarOpen}
             />
-              <div className="flex-1 md:ml-64 min-w-0 relative z-10 flex flex-col">
-          <div className="p-4 border-b border-purple-900/40 flex items-center justify-between gap-4">
+             <div className="flex-1 relative z-10 flex flex-col">
+        <div className="p-4 border-b border-purple-900/40">
                                 <button
                         className="md:hidden text-2xl"
                         onClick={() => setIsSidebarOpen(true)} >
                         ☰
                       </button>
-                  <div className="flex-1 min-w-0">
-                <Header user={user} setUser={setUser} />
-              </div>
+                  <Header user={user} setUser={setUser} />
            </div>
            <ChatMessages
            messages={messages}
