@@ -574,7 +574,8 @@ res.end();
 }
 }); 
 
-//Handle pdf history----------------------------------------------------------------------------------------------
+
+//upload route 
 app.post(
   "/api/vault/upload",
   requireAuth,
@@ -613,21 +614,33 @@ app.post(
        ragFormData.append("pdf", blob, file.originalname);
         ragFormData.append("userId", (req as any).user.id);
 
+        const controller = new AbortController();
+
+        const timeout = setTimeout(() => {
+          controller.abort();
+        }, 60000);
+
+
         const ragResponse = await fetch(
           "https://flash-ai-support-agent.onrender.com/upload",
           {
             method: "POST",
-            body: ragFormData
+            body: ragFormData,
+             signal: controller.signal,
           }
         );
+
+        clearTimeout(timeout);
 
 if (!ragResponse.ok) {
   const errorText = await ragResponse.text();
 
-  return res.status(500).json({
-    success: false,
-    message: errorText
-  });
+  console.log(errorText);
+
+return res.status(500).json({
+  success: false,
+  message: "RAG service unavailable",
+});
 }
 
        const ragData = await ragResponse.json();
@@ -645,7 +658,10 @@ res.json({
 
       res.status(500).json({
         success: false,
-        message: "Upload failed",
+       message:
+       error instanceof Error
+    ? error.message
+    : "Upload failed",
       });
     }
   }
