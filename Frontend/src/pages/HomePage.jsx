@@ -162,9 +162,7 @@ useEffect(()=>{
               >
                 ☰
               </button>
-
              <Header user={user} setUser={setUser} />
-
             </div>
            <div className="flex-1 overflow-y-auto">
            <ChatMessages

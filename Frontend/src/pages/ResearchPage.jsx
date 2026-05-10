@@ -14,6 +14,7 @@ export default function ResearchPage({ user , setUser}) {
           const [status, setStatus] = useState("");
           const [chats, setChats] = useState([]);
           const [activeChatId, setActiveChatId] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
           const chatIdRef = useRef(null);
                   
  const fetchChats = async()=>{
@@ -121,7 +122,7 @@ const handleSend =  async ()=>{
         
       return (
         <>
-              <div className="h-screen flex bg-[#05010a] text-white relative">
+        <div className="h-dvh w-full overflow-hidden flex bg-[#05010a] text-white relative">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-purple-800/10 blur-3xl"></div>
                  <Sidebar  
                  user={user}
@@ -131,17 +132,29 @@ const handleSend =  async ()=>{
             setMessages={setMessages}
             setInput={setInput}
             setStatus={setStatus}
-            setChats={setChats}/>
+            setChats={setChats}
+             isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
+            />
                   <div className="flex-1 relative z-10 flex flex-col">
-               <div className="padding-4 border-b border-purple-900/40">
-                      <Header user={user} setUser={setUser} />
-               </div>
+               <div className="relative w-full">
+                             <button
+                               className="md:hidden absolute left-4 top-1/2 -translate-y-1/2 z-50 text-2xl"
+                               onClick={() => setIsSidebarOpen(true)}
+                             >
+                               ☰
+                             </button>
+                            <Header user={user} setUser={setUser} />
+                           </div>
+
+                            <div className="flex-1 overflow-y-auto">
                <ChatMessages
                messages={messages}
                 messageEndRef={messageEndRef}
                 loading={loading}
                 status={status}
                 mode="research"/>
+                </div>
                 
                <ChatInput input={input} setInput={setInput} handleSend={handleSend}/>
                </div>
