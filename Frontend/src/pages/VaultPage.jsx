@@ -89,7 +89,30 @@ const handleUpload = async () => {
          }
       );
 
-      const data = await response.json();
+      if (!response.ok) {
+  const text = await response.text();
+
+  toast.error("Upload service unavailable", {
+    id: toastId,
+  });
+
+  console.log(text);
+
+  return;
+}
+
+     /*  const data = await response.json(); */
+     let data;
+
+try {
+  data = await response.json();
+} catch {
+  toast.error("Server returned invalid response", {
+    id: toastId,
+  });
+
+  return;
+}
 
       if (data.success) {
          toast.success("PDF uploaded successfully", {
