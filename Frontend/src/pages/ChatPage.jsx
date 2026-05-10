@@ -14,6 +14,7 @@ export default function ChatPage({ user , setUser}) {
        const [activeChatId, setActiveChatId] = useState(null);
      const isCalendarConnected = Boolean(user?.googleCalendar?.connected);
        const [status, setStatus] = useState("");
+         const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
        const [chats, setChats] = useState([]);
     
 
@@ -156,7 +157,7 @@ if (connected === "true") {
     
   return (
     <>
-          <div className="h-screen flex bg-[#05010a] text-white relative">
+           <div className="h-dvh w-full overflow-hidden flex bg-[#05010a] text-white relative">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-purple-800/10 blur-3xl"></div>
          <Sidebar
             user={user}
@@ -167,21 +168,30 @@ if (connected === "true") {
             setInput={setInput}
             setStatus={setStatus}
             setChats={setChats}
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
           />
               <div className="flex-1 relative z-10 flex flex-col">
-           <div className="padding-4 border-b border-purple-900/40">
-                  <Header user={user} setUser={setUser} />
-           </div>
+           <div className="relative w-full">
+          
+                        <button
+                          className="md:hidden absolute left-4 top-1/2 -translate-y-1/2 z-50 text-2xl"
+                          onClick={() => setIsSidebarOpen(true)}
+                        >
+                          ☰
+                        </button>
+                       <Header user={user} setUser={setUser} />
+                      </div>
            {
  isCalendarConnected ? (
 <>
-<ChatMessages
- messages={messages}
- messageEndRef={messageEndRef}
- loading={loading}
- status={status}
-   mode="manager"
-/>
+ <div className="flex-1 overflow-y-auto">
+           <ChatMessages
+           messages={messages}
+            messageEndRef={messageEndRef}
+            loading={loading}
+              mode="chat"/>
+        </div>
 
 <ChatInput
  input={input}
@@ -193,9 +203,7 @@ if (connected === "true") {
 ) : (
   
 <div className="flex-1 flex items-center justify-center">
-
 <div className="bg-[#14061f] border border-purple-500/20 rounded-3xl p-8 max-w-md w-full text-center">
-
 <h2 className="text-2xl font-bold mb-4">
  Connect Google Calendar
 </h2>
