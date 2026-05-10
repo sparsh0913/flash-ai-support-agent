@@ -190,7 +190,7 @@ if (connected === "true") {
            messages={messages}
             messageEndRef={messageEndRef}
             loading={loading}
-              mode="chat"/>
+              mode="calendar"/>
         </div>
 
 <ChatInput

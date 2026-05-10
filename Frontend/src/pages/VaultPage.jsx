@@ -19,7 +19,6 @@ export default function VaultPage({ user , setUser}) {
       const messageEndRef = useRef(null);
       const [selectedFile, setSelectedFile] = useState(null);
       const [uploading, setUploading] = useState(false);
-       const [activeChatId, setActiveChatId] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
        const navigate = useNavigate();
     
