@@ -76,14 +76,12 @@ const router = createBrowserRouter(
       );
 
       if (!response.ok) return;
-     
+    
       const data = await response.json();
-
             setUser({
         ...data.user,
         accessToken: token
       });
-
     } catch (error) {
       console.log(error);
     }

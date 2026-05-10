@@ -90,10 +90,6 @@ const handleSend =  async ()=>{
            setStatus(data.payload.message);
           }
 
-         /*  if(data.type === "research"){
-         setActiveChatId(data.payload.chatId);
-   } */
-
          if(data.type === "research"){
     currentChatId = data.payload.chatId;
     setActiveChatId(currentChatId);
@@ -101,10 +97,6 @@ const handleSend =  async ()=>{
         if(data.type === "ai"){
           setStatus("");
           setLoading(false);
-
-          /* if(activeChatId){
-            fetchChatMessages(activeChatId);
-          } */
           if(currentChatId){
               fetchChatMessages(currentChatId);
           }

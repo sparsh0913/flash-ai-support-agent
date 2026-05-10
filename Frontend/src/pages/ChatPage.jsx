@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { authFetch } from "../utils/authFetch";
 
 export default function ChatPage({ user , setUser}) {
 
@@ -18,15 +19,19 @@ export default function ChatPage({ user , setUser}) {
        const [chats, setChats] = useState([]);
     
 
-
-
-        const fetchChats = async()=>{
+const fetchChats = async()=>{
    try{
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,{
+     /*  const response = await Fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
-      });
+      }); */
+      const response = await authFetch(
+  `${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,
+  {},
+  user,
+  setUser
+);
       const data = await response.json();
       setChats(data.chats);
    }catch(error){
@@ -37,14 +42,21 @@ export default function ChatPage({ user , setUser}) {
 const fetchChatMessages = async(chatId) => {
   try{
     
-    const response = await fetch(
+/*     const response = await fetch(
+
         `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
             }
         }
-    );
+    ); */
+    const response = await authFetch(
+  `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
+  {},
+  user,
+  setUser
+);
     const data = await response.json();
     setMessages(data.chat.messages);
 }catch(error){
@@ -101,13 +113,9 @@ if(data.type === "response"){
   setStatus("");
   /* if(!data.payload.content || !data.payload.content.trim()) return; */
   setMessages((prevMessages) => {
-
       const lastMessage = prevMessages[prevMessages.length - 1];
-
       if (lastMessage && lastMessage.role === "assistant") {
-
         const clonedMessages = [...prevMessages];
-
         clonedMessages[clonedMessages.length - 1] = {
           ...lastMessage,
           content: lastMessage.content + data.payload.content,
@@ -190,6 +198,7 @@ if (connected === "true") {
            messages={messages}
             messageEndRef={messageEndRef}
             loading={loading}
+            status={status}
               mode="manager"/>
         </div>
 

@@ -33,7 +33,6 @@ export default function ChatPage({ user , setUser}) {
 
 const fetchChatMessages = async(chatId) => {
 try{
-    
     const response = await fetch(
        `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
@@ -74,7 +73,6 @@ useEffect(()=>{
       console.log("user.token is",user.accessToken)
     await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/`, {
       method: "POST",
-
   headers: {
     "Content-Type": "application/json",
      Authorization:`Bearer ${user.accessToken}`
@@ -92,20 +90,14 @@ useEffect(()=>{
    console.log("active chat id", chatIdRef.current);
 }
   if (parsedData.type === "ai") {
-
     setMessages((prevMessages) => {
-
       const lastMessage = prevMessages[prevMessages.length - 1];
-
       if (lastMessage && lastMessage.role === "assistant") {
-
         const clonedMessages = [...prevMessages];
-
         clonedMessages[clonedMessages.length - 1] = {
           ...lastMessage,
           content: lastMessage.content + parsedData.payload.text,
         };
-
         return clonedMessages;
       } else {
         return [
