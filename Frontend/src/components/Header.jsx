@@ -37,9 +37,12 @@ return(
  {/* Right Section */}
 <div className="flex items-center gap-4 md:gap-6 text-sm text-gray-300">
 
-  <Link to="/" className="hover:text-white transition">
-    Dashboard
-  </Link>
+ <Link 
+  to="/" 
+  className="hidden md:block hover:text-white transition"
+>
+  Dashboard
+</Link>
 
   {!user ? (
     <>
@@ -78,6 +81,7 @@ return(
           }}
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition"
         >
+          <i className="fa-solid fa-user"></i>
           Profile
         </button>
 
@@ -85,12 +89,14 @@ return(
           onClick={handleLogout}
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition text-red-400"
         >
+          <i className="fa-solid fa-right-from-bracket" style="color: rgb(209, 77, 52);"></i>
           Logout
         </button>
 
         <button
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition"
         >
+          <i className="fa-solid fa-gear"></i>
           Settings
         </button>
       </div>
