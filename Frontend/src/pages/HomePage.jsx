@@ -141,7 +141,7 @@ useEffect(()=>{
     
   return (
     <>
-         <div className="h-screen w-full overflow-hidden flex bg-[#05010a] text-white relative">
+         <div className="h-dvh w-full overflow-hidden flex bg-[#05010a] text-white relative">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-purple-800/10 blur-3xl"></div>
              <Sidebar user={user}
             chats={chats}
@@ -153,7 +153,7 @@ useEffect(()=>{
             isSidebarOpen={isSidebarOpen}
             setIsSidebarOpen={setIsSidebarOpen}
             />
-             <div className="flex-1 md:ml-64 relative z-10 flex flex-col">
+             <div className="flex-1 relative z-10 flex flex-col">
         <div className="p-4 border-b border-purple-900/40">
                                 <button
                         className="md:hidden text-2xl"
