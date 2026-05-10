@@ -157,7 +157,7 @@ useEffect(()=>{
       <div className="relative w-full">
 
               <button
-                 className="md:hidden fixed left-4 top-4 z-50 text-2xl"
+                 className="md:hidden fixed left-2 top-4 z-50 text-2xl"
                 onClick={() => setIsSidebarOpen(true)}
               >
                 ☰
