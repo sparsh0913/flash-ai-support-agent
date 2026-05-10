@@ -14,6 +14,7 @@ export default function ChatPage({ user , setUser}) {
       const messageEndRef = useRef(null);
       const [chats,setChats] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
       const fetchChats = async()=>{
    try{
@@ -149,9 +150,16 @@ useEffect(()=>{
             setMessages={setMessages}
             setInput={setInput}
             setChats={setChats}
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
             />
               <div className="flex-1 relative z-10 flex flex-col">
-           <div className="padding-4 border-b border-purple-900/40">
+           <div className="p-4 border-b border-purple-900/40 flex items-center gap-4">
+                                <button
+                        className="md:hidden text-2xl"
+                        onClick={() => setIsSidebarOpen(true)} >
+                        ☰
+                      </button>
                   <Header user={user} setUser={setUser} />
            </div>
            <ChatMessages

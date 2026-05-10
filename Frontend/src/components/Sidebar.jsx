@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-export default function Sidebar({user,chats,setActiveChatId,activeChatId,setInput,setStatus,setMessages,setChats}){
+export default function Sidebar({user,chats,setActiveChatId,activeChatId,setInput,setStatus,setMessages,setChats,isSidebarOpen,setIsSidebarOpen}){
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +40,23 @@ const handleDeleteChat = async (chatId) => {
 };
     {/* sidebar */}
     return(
-        <div className="w-64 h-screen flex flex-col border-r border-purple-900/40 p-4 bg-black/40 backdrop-blur-lg relative z-10">
+                          <div
+                      className={`
+                        fixed md:relative
+                        top-0 left-0
+                        h-screen w-64
+                        flex flex-col
+                        border-r border-purple-900/40
+                        p-4 bg-black/95 md:bg-black/40
+                        backdrop-blur-lg
+                        z-50
+                        transform transition-transform duration-300
+
+                        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+
+                        md:translate-x-0
+                      `}
+                    >
                 <div className="mb-6">
                 <button onClick={handleNewChat}
                 className="w-full bg-purple-600 hover:bg-purple-500 transition py-2 rounded-xl">
