@@ -35,7 +35,7 @@ return(
   </div>
 
  {/* Right Section */}
-<div className="hidden md:flex items-center gap-6 text-sm text-gray-300">
+<div className="flex items-center gap-4 md:gap-6 text-sm text-gray-300">
 
   <Link to="/" className="hover:text-white transition">
     Dashboard
@@ -53,9 +53,9 @@ return(
     </>
   ) : (
     <>
-      <button className="hover:text-red-400 transition" onClick={handleLogout}>
+     {/*  <button className="hover:text-red-400 transition" onClick={handleLogout}>
         Logout
-      </button>
+      </button> */}
 
 <div className="relative">
 
@@ -80,14 +80,18 @@ return(
         >
           Profile
         </button>
-
+                <button
+          onClick={handleLogout}
+          className="w-full text-left px-4 py-3 hover:bg-white/5 transition text-red-400"
+        >
+          Logout
+        </button>
         <button
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition"
         >
           Settings
         </button>
       </div>
-
     )
   }
 </div>
