@@ -56,7 +56,15 @@ const handleDeleteChat = async (chatId) => {
 
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
           `}
-        >
+        >         
+        <div className="md:hidden flex justify-end mb-4">
+                      <button
+                        onClick={() => setIsSidebarOpen(false)}
+                        className="text-2xl text-white"
+                      >
+                          ×
+                      </button>
+                    </div>
                 <div className="mb-6">
                 <button onClick={handleNewChat}
                 className="w-full bg-purple-600 hover:bg-purple-500 transition py-2 rounded-xl">
