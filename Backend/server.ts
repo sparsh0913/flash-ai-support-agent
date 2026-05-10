@@ -621,19 +621,24 @@ app.post(
           }
         );
 
-        const text = await ragResponse.text();
-        console.log(text);
+if (!ragResponse.ok) {
+  const errorText = await ragResponse.text();
 
-        res.json({
-          success: true,
-          response: text
-        });
-       /*  const ragData = await ragResponse.json();
-      res.json({
-        success: true,
-        chatId: activeChatId,
-        ragData
-      }); */
+  return res.status(500).json({
+    success: false,
+    message: errorText
+  });
+}
+
+       const ragData = await ragResponse.json();
+
+console.log(ragData);
+
+res.json({
+  success: true,
+  chatId: activeChatId,
+  ragData
+});
 
     } catch (error) {
       console.error(error);
