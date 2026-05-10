@@ -89,7 +89,7 @@ return(
           onClick={handleLogout}
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition text-red-400"
         >
-          <i className="fa-solid fa-right-from-bracket" style="color: rgb(209, 77, 52);"></i>
+          <i className="fa-solid fa-right-from-bracket"></i>
           Logout
         </button>
 
