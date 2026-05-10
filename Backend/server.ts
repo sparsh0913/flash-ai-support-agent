@@ -621,12 +621,19 @@ app.post(
           }
         );
 
-        const ragData = await ragResponse.json();
+        const text = await ragResponse.text();
+        console.log(text);
+
+        res.json({
+          success: true,
+          response: text
+        });
+       /*  const ragData = await ragResponse.json();
       res.json({
         success: true,
         chatId: activeChatId,
         ragData
-      });
+      }); */
 
     } catch (error) {
       console.error(error);
