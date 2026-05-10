@@ -154,18 +154,16 @@ useEffect(()=>{
             setIsSidebarOpen={setIsSidebarOpen}
             />
              <div className="flex-1 relative z-10 flex flex-col">
-       <div className="p-4 flex items-center gap-4">
+      <div className="relative w-full">
 
               <button
-                className="md:hidden text-2xl"
+                 className="md:hidden fixed left-4 top-4 z-50 text-2xl"
                 onClick={() => setIsSidebarOpen(true)}
               >
                 ☰
               </button>
 
-              <div className="flex-1">
-                <Header user={user} setUser={setUser} />
-              </div>
+             <Header user={user} setUser={setUser} />
 
             </div>
            <div className="flex-1 overflow-y-auto">
