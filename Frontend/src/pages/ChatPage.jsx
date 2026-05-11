@@ -21,7 +21,7 @@ export default function ChatPage({ user , setUser}) {
 
 const fetchChats = async()=>{
    try{
-      const response = await Fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,{
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
