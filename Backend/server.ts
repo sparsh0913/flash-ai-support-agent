@@ -667,6 +667,12 @@ res.json({
   }
 );
 
+app.get("/health", (req, res) => {
+  res.json({
+    success: true,
+    message: "Backend running"
+  });
+});
 
   await connectDB();
   const PORT = process.env.PORT || 8080;
