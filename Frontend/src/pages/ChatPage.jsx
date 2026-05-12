@@ -5,6 +5,7 @@ import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { authFetch } from "../utils/authFetch";
+import { getValidAccessToken } from "../utils/getValidAccessToken";
 
 export default function ChatPage({ user , setUser}) {
 
@@ -75,7 +76,6 @@ useEffect(()=>{
 
     
     const handleSend =  async ()=>{
-    
     if(!input.trim()) return;
     const userMessage = 
       {
@@ -86,12 +86,17 @@ useEffect(()=>{
       setMessages((prev)=>[...prev , userMessage]);
       setInput("");
       setLoading(true);
+      const validToken = await getValidAccessToken(
+   user,
+   setUser
+);
+
       await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/chat`,{
        
       method:"POST",
       headers:{
         "content-type": "application/JSON",
-        Authorization:`Bearer ${user.accessToken}`
+        Authorization: `Bearer ${validToken}`
       },
       body : JSON.stringify({
         message:input,
@@ -132,7 +137,6 @@ if(data.type === "response"){
       }
     });
 }
-
    },
   onclose() {
     setLoading(false);
