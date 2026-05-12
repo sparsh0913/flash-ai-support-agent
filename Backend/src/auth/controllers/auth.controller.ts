@@ -254,7 +254,7 @@ try{
     },
     config.JWT_SECRET,
     {
-        expiresIn: "15m"
+        expiresIn: "2m"
     }
 )
 
