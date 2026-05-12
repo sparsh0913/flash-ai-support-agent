@@ -86,10 +86,12 @@ useEffect(()=>{
       setMessages((prev)=>[...prev , userMessage]);
       setInput("");
       setLoading(true);
-      const validToken = await getValidAccessToken(
-   user,
-   setUser
-);
+
+      try{
+          const validToken = await getValidAccessToken(
+      user,
+      setUser
+    );
 
       await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/chat`,{
        
@@ -145,7 +147,15 @@ if(data.type === "response"){
     console.log(error);
     setLoading(false);
   },});
-    }
+}catch(err){
+
+   console.log(err);
+   toast.error("Session expired");
+   setLoading(false);
+   setUser(null);
+   navigate("/login");
+   return;
+}}
 
       useEffect(() => {
     if(activeChatId){
