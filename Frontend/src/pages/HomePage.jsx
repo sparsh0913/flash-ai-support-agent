@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { authFetch } from "../utils/authFetch";
 
 export default function ChatPage({ user , setUser}) {
     

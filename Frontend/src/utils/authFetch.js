@@ -14,7 +14,10 @@ export const authFetch = async (
     credentials: "include",
   });
 
+  // token expired
   if (response.status === 401) {
+
+    console.log("Access token expired. Refreshing...");
 
     const refreshResponse = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/auth/refreshToken`,
@@ -23,6 +26,7 @@ export const authFetch = async (
       }
     );
 
+    // refresh token also expired
     if (!refreshResponse.ok) {
       throw new Error("Session expired");
     }
@@ -31,11 +35,15 @@ export const authFetch = async (
 
     const newAccessToken = refreshData.accessToken;
 
+    // update user state
     setUser((prev) => ({
       ...prev,
       accessToken: newAccessToken,
     }));
 
+    console.log("New access token generated");
+
+    // retry original request
     response = await fetch(url, {
       ...options,
       headers: {

@@ -21,17 +21,17 @@ export default function ChatPage({ user , setUser}) {
 
 const fetchChats = async()=>{
    try{
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,{
+      /* const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
-      });
-     /*  const response = await authFetch(
+      }); */
+      const response = await authFetch(
   `${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=calendar`,
   {},
   user,
   setUser
-); */
+);
       const data = await response.json();
       setChats(data.chats);
    }catch(error){
@@ -42,21 +42,20 @@ const fetchChats = async()=>{
 const fetchChatMessages = async(chatId) => {
   try{
     
-    const response = await fetch(
-
+   /*  const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
             }
         }
-    );
-    /* const response = await authFetch(
+    ); */
+    const response = await authFetch(
   `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
   {},
   user,
   setUser
-); */
+);
     const data = await response.json();
     setMessages(data.chat.messages);
 }catch(error){
