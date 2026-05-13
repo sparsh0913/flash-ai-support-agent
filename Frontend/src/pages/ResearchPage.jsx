@@ -93,6 +93,7 @@ const handleSend =  async ()=>{
          if(data.type === "research"){
     currentChatId = data.payload.chatId;
     setActiveChatId(currentChatId);
+    fetchChats();
 }
         if(data.type === "ai"){
           setStatus("");

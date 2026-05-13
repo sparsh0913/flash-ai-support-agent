@@ -183,6 +183,7 @@ try {
 
       if(data.type === "vault"){
          setActiveChatId(data.payload.chatId);
+         fetchChats();
    }
       if (data.type === "status") {
         setStatus(data.payload.message);
