@@ -5,6 +5,7 @@ import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { authFetch } from "../utils/authFetch";
+import { getValidAccessToken } from "../utils/getValidAccessToken";
 
 export default function ChatPage({ user , setUser}) {
     
@@ -19,11 +20,18 @@ export default function ChatPage({ user , setUser}) {
 
       const fetchChats = async()=>{
    try{
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=chat`,{
+      /* const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=chat`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
-      });
+      }); */
+
+      const response = await authFetch(
+   `${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=chat`,
+   {},
+   user,
+   setUser
+);
       const data = await response.json();
       setChats(data.chats);
    }catch(error){
@@ -34,14 +42,21 @@ export default function ChatPage({ user , setUser}) {
 
 const fetchChatMessages = async(chatId) => {
 try{
-    const response = await fetch(
+    /* const response = await fetch(
        `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
             }
         }
-    );
+    ); */
+
+    const response = await authFetch(
+   `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
+   {},
+   user,
+   setUser
+);
     const data = await response.json();
     setMessages(data.chat.messages);
 }catch(error){
@@ -71,12 +86,20 @@ useEffect(()=>{
       setMessages((prev)=>[...prev , userMessage]);
       setInput("");
       setLoading(true);
-      console.log("user.token is",user.accessToken)
+      console.log("user.token is",user.accessToken);
+
+
+      try{
+      const validToken = await getValidAccessToken(
+   user,
+   setUser
+); 
+
     await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/`, {
       method: "POST",
   headers: {
     "Content-Type": "application/json",
-     Authorization:`Bearer ${user.accessToken}`
+     Authorization: `Bearer ${validToken}`
   },
   body: JSON.stringify({
     query: input,
@@ -120,6 +143,15 @@ useEffect(()=>{
     setLoading(false);
   },
 })
+      }catch(err){
+
+   console.log(err);
+   toast.error("Session expired");
+   setLoading(false);
+   setUser(null);
+   navigate("/login");
+   return;
+}
     }
     
     useEffect(()=>{
