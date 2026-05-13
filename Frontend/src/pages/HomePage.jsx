@@ -83,7 +83,15 @@ useEffect(()=>{
         content: input
       }
     
-      setMessages((prev)=>[...prev , userMessage]);
+      /* setMessages((prev)=>[...prev , userMessage]); */
+      setMessages((prev)=>[
+   ...prev,
+   userMessage,
+   {
+      role:"assistant",
+      content:""
+   }
+]);
       setInput("");
       setLoading(true);
       console.log("user.token is",user.accessToken);
@@ -115,7 +123,7 @@ useEffect(()=>{
     fetchChats();
    console.log("active chat id", parsedData.payload.chatId);
 }
-  if (parsedData.type === "ai") {
+/*   if (parsedData.type === "ai") {
     setMessages((prevMessages) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
       if (lastMessage && lastMessage.role === "assistant") {
@@ -135,8 +143,22 @@ useEffect(()=>{
         ];
       }
     });
-  }
-},
+  } */
+setMessages((prevMessages)=>{
+
+   const clonedMessages = [...prevMessages];
+
+   clonedMessages[clonedMessages.length - 1] = {
+      ...clonedMessages[clonedMessages.length - 1],
+      content:
+         clonedMessages[clonedMessages.length - 1].content
+         + parsedData.payload.text
+   };
+
+   return clonedMessages;
+});
+
+  },
   onclose() {
     setLoading(false);
   },
