@@ -123,10 +123,10 @@ useEffect(()=>{
     fetchChats();
    console.log("active chat id", parsedData.payload.chatId);
 }
-/*   if (parsedData.type === "ai") {
+  if (parsedData.type === "ai") {
     setMessages((prevMessages) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
-      if (lastMessage && lastMessage.role === "assistant") {
+     /*  if (lastMessage && lastMessage.role === "assistant") {
         const clonedMessages = [...prevMessages];
         clonedMessages[clonedMessages.length - 1] = {
           ...lastMessage,
@@ -141,10 +141,8 @@ useEffect(()=>{
             content: parsedData.payload.text,
           },
         ];
-      }
-    });
-  } */
-setMessages((prevMessages)=>{
+      } */
+       setMessages((prevMessages)=>{
 
    const clonedMessages = [...prevMessages];
 
@@ -157,6 +155,9 @@ setMessages((prevMessages)=>{
 
    return clonedMessages;
 });
+      });
+  }
+
 
   },
   onclose() {
