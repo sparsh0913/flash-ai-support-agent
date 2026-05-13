@@ -111,7 +111,8 @@ useEffect(()=>{
     
   if(parsedData.type === "chat"){
    chatIdRef.current = parsedData.payload.chatId;
-   console.log("active chat id", chatIdRef.current);
+    setActiveChatId(parsedData.payload.chatId);
+   console.log("active chat id", parsedData.payload.chatId);
 }
   if (parsedData.type === "ai") {
     setMessages((prevMessages) => {
