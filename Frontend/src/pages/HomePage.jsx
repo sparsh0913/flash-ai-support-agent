@@ -123,10 +123,10 @@ useEffect(()=>{
     fetchChats();
    console.log("active chat id", parsedData.payload.chatId);
 }
-  if (parsedData.type === "ai") {
+ /*  if (parsedData.type === "ai") {
     setMessages((prevMessages) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
-     /*  if (lastMessage && lastMessage.role === "assistant") {
+    if (lastMessage && lastMessage.role === "assistant") {
         const clonedMessages = [...prevMessages];
         clonedMessages[clonedMessages.length - 1] = {
           ...lastMessage,
@@ -141,24 +141,29 @@ useEffect(()=>{
             content: parsedData.payload.text,
           },
         ];
-      } */
-       setMessages((prevMessages)=>{
-
-   const clonedMessages = [...prevMessages];
-
-   clonedMessages[clonedMessages.length - 1] = {
-      ...clonedMessages[clonedMessages.length - 1],
-      content:
-         clonedMessages[clonedMessages.length - 1].content
-         + parsedData.payload.text
-   };
-
-   return clonedMessages;
-});
+      } 
+    
       });
-  }
+  } */
 
+if(parsedData.type === "ai") {
 
+   setMessages((prevMessages)=>{
+
+      const clonedMessages = [...prevMessages];
+
+      clonedMessages[clonedMessages.length - 1] = {
+
+         ...clonedMessages[clonedMessages.length - 1],
+
+         content:
+            clonedMessages[clonedMessages.length - 1].content
+            + parsedData.payload.text
+      };
+
+      return clonedMessages;
+   });
+}
   },
   onclose() {
     setLoading(false);
