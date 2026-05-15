@@ -69,15 +69,26 @@ const handleSend =  async ()=>{
           }
           setMessages((prev)=>[...prev , userMessage]);
           setInput("");
-        
           setLoading(true);
-
+             let headers = {
+            "Content-Type":"application/json"
+         };
+         if(user){
+         
+            const validToken = await getValidAccessToken(
+               user,
+               setUser
+            );
+         
+            headers.Authorization = `Bearer ${validToken}`;
+         }
           await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/api/research`,{
           method:"POST",
-          headers:{
+         /*  headers:{
             "Content-Type":"application/json",
             Authorization:`Bearer ${user.accessToken}`
-          },
+          }, */
+          headers,
 
           body: JSON.stringify({
             query: input,
