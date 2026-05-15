@@ -90,19 +90,33 @@ useEffect(()=>{
       setLoading(true);
       console.log("user.token is",user.accessToken);
 
-
       try{
-      const validToken = await getValidAccessToken(
+      /* const validToken = await getValidAccessToken(
    user,
    setUser
-); 
+);  */
+
+        let headers = {
+   "Content-Type":"application/json"
+};
+if(user){
+
+   const validToken = await getValidAccessToken(
+      user,
+      setUser
+   );
+
+   headers.Authorization = `Bearer ${validToken}`;
+}
+
         hasStartedStreamingRef.current = false;
     await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/`, {
       method: "POST",
-  headers: {
+  /* headers: {
     "Content-Type": "application/json",
      Authorization: `Bearer ${validToken}`
-  },
+  }, */
+   headers,
   body: JSON.stringify({
     query: input,
     chatId: activeChatId
@@ -114,7 +128,9 @@ useEffect(()=>{
   if(parsedData.type === "chat"){
    chatIdRef.current = parsedData.payload.chatId;
     setActiveChatId(parsedData.payload.chatId);
-    fetchChats();
+     if(user){
+      fetchChats();
+   }
    console.log("active chat id", parsedData.payload.chatId);
 }
   if (parsedData.type === "ai") {
@@ -156,7 +172,6 @@ useEffect(()=>{
   },
 })
       }catch(err){
-
    console.log(err);
    toast.error("Session expired");
    setLoading(false);
