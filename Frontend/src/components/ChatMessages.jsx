@@ -53,14 +53,14 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
        </div>
         ))}
 
-        {loading && (
+      {/*   {loading && (
             <div className="flex justify-start">
               <div className="max-w-xl px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-lg">
                 <BeatLoader size={6} color="#a855f7" />
               </div>
             </div>  
            )}
-
+ */}
            {status && (
           <div className="px-2 text-sm text-white-400">
               {status}
