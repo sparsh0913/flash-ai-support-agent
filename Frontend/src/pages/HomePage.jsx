@@ -16,7 +16,6 @@ export default function ChatPage({ user , setUser}) {
       const messageEndRef = useRef(null);
       const [chats,setChats] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
-    const streamedTextRef = useRef("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
 
       const fetchChats = async()=>{
@@ -96,7 +95,7 @@ useEffect(()=>{
    user,
    setUser
 ); 
-         streamedTextRef.current = "";
+        
     await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/`, {
       method: "POST",
   headers: {
@@ -121,12 +120,11 @@ useEffect(()=>{
     setMessages((prevMessages) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
     if (lastMessage && lastMessage.role === "assistant") {
-      streamedTextRef.current += parsedData.payload.text;
         const clonedMessages = [...prevMessages];
         clonedMessages[clonedMessages.length - 1] = {
           ...lastMessage,
-          /* content: lastMessage.content + parsedData.payload.text, */
-        content: streamedTextRef.current,
+          content: lastMessage.content + parsedData.payload.text,
+       
         };
         return clonedMessages;
       } else {
