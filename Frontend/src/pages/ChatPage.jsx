@@ -16,6 +16,7 @@ export default function ChatPage({ user , setUser}) {
        const [activeChatId, setActiveChatId] = useState(null);
      const isCalendarConnected = Boolean(user?.googleCalendar?.connected);
        const [status, setStatus] = useState("");
+          const hasStartedStreamingRef = useRef(false);
          const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
        const [chats, setChats] = useState([]);
     
@@ -92,7 +93,7 @@ useEffect(()=>{
       user,
       setUser
     );
-
+          hasStartedStreamingRef.current = false;
       await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/chat`,{
        
       method:"POST",
@@ -116,8 +117,12 @@ useEffect(()=>{
    setStatus(data.payload.message);
 }
 if(data.type === "response"){
+  if(!hasStartedStreamingRef.current){
+   setLoading(false);
+   hasStartedStreamingRef.current = true;
+  }
   setStatus("");
-  /* if(!data.payload.content || !data.payload.content.trim()) return; */
+  
   setMessages((prevMessages) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
       if (lastMessage && lastMessage.role === "assistant") {
