@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { authFetch } from "../utils/authFetch";
 import { getValidAccessToken } from "../utils/getValidAccessToken";
 
 export default function ResearchPage({ user , setUser}) {
@@ -83,7 +84,7 @@ const handleSend =  async ()=>{
           setMessages((prev)=>[...prev , userMessage]);
           setInput("");
           setLoading(true);
-          
+
              let headers = {
             "Content-Type":"application/json"
          };
