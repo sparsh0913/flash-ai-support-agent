@@ -88,7 +88,7 @@ useEffect(()=>{
   
       setInput("");
       setLoading(true);
-      console.log("user.token is",user.accessToken);
+      console.log("user.token is",user?.accessToken);
 
       try{
       /* const validToken = await getValidAccessToken(
