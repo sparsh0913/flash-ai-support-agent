@@ -16,6 +16,7 @@ export default function ChatPage({ user , setUser}) {
       const messageEndRef = useRef(null);
       const [chats,setChats] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
+    const hasStartedStreamingRef = useRef(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
 
       const fetchChats = async()=>{
@@ -95,7 +96,7 @@ useEffect(()=>{
    user,
    setUser
 ); 
-        
+        hasStartedStreamingRef.current = false;
     await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/`, {
       method: "POST",
   headers: {
@@ -117,6 +118,10 @@ useEffect(()=>{
    console.log("active chat id", parsedData.payload.chatId);
 }
   if (parsedData.type === "ai") {
+    if(!hasStartedStreamingRef.current){
+   setLoading(false);
+   hasStartedStreamingRef.current = true;
+}
     setMessages((prevMessages) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
     if (lastMessage && lastMessage.role === "assistant") {
