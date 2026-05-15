@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import ChatMessages from "../components/ChatMessages";
 import ChatInput from "../components/ChatInput";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { getValidAccessToken } from "../utils/getValidAccessToken";
 
 export default function ResearchPage({ user , setUser}) {
   
@@ -19,11 +20,17 @@ export default function ResearchPage({ user , setUser}) {
                   
  const fetchChats = async()=>{
    try{
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=research`,{
+     /*  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=research`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
-      });
+      }); */
+          const response = await authFetch(
+         `${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=research`,
+         {},
+         user,
+         setUser
+      );
       const data = await response.json();
       setChats(data.chats);
    }catch(error){
@@ -34,13 +41,19 @@ export default function ResearchPage({ user , setUser}) {
 const fetchChatMessages = async(chatId) => {
   try{
     
-    const response = await fetch(
+    /* const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
             }
         }
+    ); */
+    const response = await authFetch(
+       `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
+       {},
+       user,
+       setUser
     );
     const data = await response.json();
     setMessages(data.chat.messages);
@@ -70,11 +83,11 @@ const handleSend =  async ()=>{
           setMessages((prev)=>[...prev , userMessage]);
           setInput("");
           setLoading(true);
+          
              let headers = {
             "Content-Type":"application/json"
          };
          if(user){
-         
             const validToken = await getValidAccessToken(
                user,
                setUser
@@ -84,10 +97,6 @@ const handleSend =  async ()=>{
          }
           await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/api/research`,{
           method:"POST",
-         /*  headers:{
-            "Content-Type":"application/json",
-            Authorization:`Bearer ${user.accessToken}`
-          }, */
           headers,
 
           body: JSON.stringify({
