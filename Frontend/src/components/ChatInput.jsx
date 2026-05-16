@@ -13,7 +13,13 @@ export default function ChatInput({ input, setInput, handleSend ,  setFile, vaul
                        bg-gradient-to-t from-[#05010a] via-[#05010a]/80 to-transparent">
          
          <div className="max-w-3xl mx-auto">
-  <div className="flex items-center bg-white/5 backdrop-blur-xl border border-purple-900/40 rounded-2xl px-4 py-3">
+  <div className="
+          flex items-center gap-2
+          bg-white/5 backdrop-blur-xl
+          border border-purple-900/40
+          rounded-2xl px-3 py-3
+          w-full overflow-hidden
+          ">
     
     {vaultMode && (
   <label className="mr-3 cursor-pointer text-gray-400 hover:text-white transition">
@@ -32,26 +38,59 @@ export default function ChatInput({ input, setInput, handleSend ,  setFile, vaul
   <button
   disabled={uploading}
     onClick={() => window.open(URL.createObjectURL(file), "_blank")}
-    className="mr-3 text-sm text-purple-300 hover:text-white underline"
+   className="
+      text-sm text-purple-300
+      hover:text-white underline
+      truncate max-w-[90px] sm:max-w-[140px]
+      shrink
+      "
   >
+    <div className="flex items-center gap-1">
+  <span className="truncate">
     {file.name}
+  </span>
+
+  <button
+    type="button"
+    onClick={(e)=>{
+      e.stopPropagation();
+      setFile(null);
+    }}
+    className="text-red-400 hover:text-red-300 text-xs"
+  >
+    ✕
+  </button>
+</div>
   </button>
 )}
 
     <input
     disabled={uploading}
       type="text"
-      placeholder="Ask anything..."
+     placeholder={file ? "" : "Ask anything..."}
       value={input}
       onChange={(e)=>setInput(e.target.value)}
       onKeyDown={handleKeyDown}
-      className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
+      className="
+      flex-1 min-w-0
+      bg-transparent outline-none
+      text-white placeholder-gray-400
+      "
     />
 
    <button
   disabled={uploading}
   onClick={handleSend}
-  className="ml-3 bg-purple-600 hover:bg-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition px-4 py-2 rounded-xl"
+  className="
+shrink-0
+ml-1
+bg-purple-600 hover:bg-purple-500
+disabled:opacity-50
+disabled:cursor-not-allowed
+transition
+px-4 py-2
+rounded-xl
+"
 >
   {uploading ? "Uploading..." : "Send"}
 </button>
