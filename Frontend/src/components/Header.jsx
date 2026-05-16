@@ -60,7 +60,7 @@ return(
         Logout
       </button> */}
 
-<div className="relative">
+<div className="relative z-[999]">
 
   <button
     onClick={() => setShowDropdown(!showDropdown)}
@@ -72,7 +72,7 @@ return(
   {
     showDropdown && (
 
-      <div className="absolute right-0 mt-3 w-52 bg-[#141414] border border-purple-500/20 rounded-2xl shadow-2xl overflow-hidden z-50">
+      <div className="absolute right-0 mt-3 w-52 bg-[#141414] border border-purple-500/20 rounded-2xl shadow-2xl overflow-hidden z-[999]">
 
         <button
           onClick={() => {
@@ -82,6 +82,7 @@ return(
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition"
         >
           <i className="fa-solid fa-user"></i>
+           &nbsp;
           Profile
         </button>
 
@@ -90,6 +91,7 @@ return(
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition text-red-400"
         >
           <i className="fa-solid fa-right-from-bracket"></i>
+          &nbsp;
           Logout
         </button>
 
@@ -97,6 +99,7 @@ return(
           className="w-full text-left px-4 py-3 hover:bg-white/5 transition"
         >
           <i className="fa-solid fa-gear"></i>
+           &nbsp;
           Settings
         </button>
       </div>
