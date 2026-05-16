@@ -41,9 +41,29 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
             uploaded successfully. Ask anything about this PDF.
           </span>
         ) : (
- <div className="prose prose-invert max-w-none">
+/*  <div className="prose prose-invert max-w-none">
   <ReactMarkdown
     rehypePlugins={[rehypeHighlight]}
+  >
+    {msg.content}
+  </ReactMarkdown>
+</div> */
+<div className="prose prose-invert max-w-none break-words overflow-hidden">
+  <ReactMarkdown
+    rehypePlugins={[rehypeHighlight]}
+    components={{
+      pre: ({ children }) => (
+        <pre className="overflow-x-auto max-w-full rounded-xl">
+          {children}
+        </pre>
+      ),
+
+      code: ({ children, className }) => (
+        <code className={`${className || ""} break-words`}>
+          {children}
+        </code>
+      )
+    }}
   >
     {msg.content}
   </ReactMarkdown>
