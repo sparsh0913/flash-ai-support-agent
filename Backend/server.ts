@@ -346,15 +346,18 @@ if(!messageChunk?.content) continue;
 
 const content = messageChunk.content as string;
 const parsed = JSON.parse(content);
+finalAnswer = parsed.answer;
+console.log("STREAM CHUNK");
+console.log(metadata.langgraph_node);
+console.log(parsed.answer);
+}
 const aiEvent = {
   type: "ai",
   payload: {
-    text: parsed.answer,
+    text: finalAnswer,
   },
 };
-finalAnswer = parsed.answer;
 res.write(`data:${JSON.stringify(aiEvent)}\n\n`);
-}
 if(activeChatId){
    await appendMessage(
       activeChatId,
