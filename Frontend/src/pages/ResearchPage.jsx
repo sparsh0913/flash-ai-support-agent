@@ -137,10 +137,10 @@ const handleSend =  async ()=>{
         }})
   }        
     useEffect(() => {
-    if(activeChatId){
+    if(activeChatId && user){
         fetchChatMessages(activeChatId);
     }
-}, [activeChatId]);
+}, [activeChatId , user]);
         useEffect(()=>{
          messageEndRef.current?.scrollIntoView({behavior:"smooth"})
         },[messages])
