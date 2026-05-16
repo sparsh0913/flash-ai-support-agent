@@ -6,6 +6,8 @@ import ChatInput from "../components/ChatInput";
 import { useNavigate } from "react-router-dom";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import toast from "react-hot-toast";
+import { authFetch } from "../utils/authFetch";
+import { getValidAccessToken } from "../utils/getValidAccessToken";
 
 export default function VaultPage({ user , setUser}) {
       const [messages,setMessages] = useState([]);
@@ -24,11 +26,17 @@ export default function VaultPage({ user , setUser}) {
     
  const fetchChats = async()=>{
    try{
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=vault`,{
+      /* const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=vault`,{
          headers:{
             Authorization:`Bearer ${user.accessToken}`
          }
-      });
+      }); */
+       const response = await authFetch(
+   `${import.meta.env.VITE_BACKEND_URL}/api/chats?mode=vault`,
+   {},
+   user,
+   setUser
+);
       const data = await response.json();
       setChats(data.chats);
    }catch(error){
@@ -39,14 +47,20 @@ export default function VaultPage({ user , setUser}) {
 const fetchChatMessages = async(chatId) => {
   try{
     
-    const response = await fetch(
+   /*  const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
         {
             headers:{
                 Authorization:`Bearer ${user.accessToken}`
             }
         }
-    );
+    ); */
+     const response = await authFetch(
+   `${import.meta.env.VITE_BACKEND_URL}/api/chats/${chatId}`,
+   {},
+   user,
+   setUser
+);
     const data = await response.json();
     setMessages(data.chat.messages);
 }catch(error){
@@ -166,12 +180,27 @@ try {
       setInput("");
       setLoading(true);
 
+        let headers = {
+            "Content-Type":"application/json"
+         };
+         if(user){
+
+            const validToken = await getValidAccessToken(
+               user,
+               setUser
+            );
+
+            headers.Authorization = `Bearer ${validToken}`;
+         }
+
+
       await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/api/retrieval`, {
         method: "POST",
-        headers: {
+        headers,
+        /* headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.accessToken}`,
-        },
+        }, */
         body: JSON.stringify({
           message: input,
           chatId: activeChatId
