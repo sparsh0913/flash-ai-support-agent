@@ -99,13 +99,13 @@ const handleSend =  async ()=>{
           await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/api/research`,{
           method:"POST",
           headers,
-
           body: JSON.stringify({
             query: input,
               chatId: activeChatId
           }),
 
           onmessage(event){
+            console.log(JSON.parse(event.data));
             const data = JSON.parse(event.data);
             if(data.type === "status"){
            setStatus(data.payload.message);
@@ -121,7 +121,16 @@ const handleSend =  async ()=>{
         if(data.type === "ai"){
           setStatus("");
           setLoading(false);
-          if(currentChatId){
+           if(!user){
+      setMessages((prev)=>[
+         ...prev,
+         {
+            role:"assistant",
+            content:data.payload.text
+         }
+      ]);
+   }
+          if(currentChatId && user){
               fetchChatMessages(currentChatId);
           }
 }
