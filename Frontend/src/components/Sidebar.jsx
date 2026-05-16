@@ -140,8 +140,8 @@ const handleDeleteChat = async (chatId) => {
                                   : "hover:bg-white/10"
                               }`}
                           onClick={() => setActiveChatId(chat._id)}>
-                              <div className="flex items-center justify-between gap-2">
-                            <p className="font-semibold text-white truncate">
+                             <div className="flex items-center gap-2 w-full overflow-hidden">
+                            <p className="font-semibold text-white truncate flex-1 min-w-0">
                               {chat.title}
                             </p>
                             <button
@@ -149,7 +149,13 @@ const handleDeleteChat = async (chatId) => {
                                 e.stopPropagation();
                                 handleDeleteChat(chat._id);
                               }}
-                           className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-400 transition"
+                           className="
+                                  shrink-0
+                                  opacity-100 md:opacity-0
+                                  md:group-hover:opacity-100
+                                  text-gray-400 hover:text-red-400
+                                  transition
+                                  "
                             >
                               ✕
                             </button>
