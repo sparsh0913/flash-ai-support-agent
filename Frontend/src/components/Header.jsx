@@ -24,7 +24,7 @@ const [showProfile, setShowProfile] = useState(false);
 };
 return(
 <>
-   <div className="flex items-center justify-between pl-16 md:pl-6 pr-6 py-4 border-b border-purple-900/30 bg-black/20 backdrop-blur-lg">
+   <div className=" relative z-50 flex items-center justify-between pl-16 md:pl-6 pr-6 py-4 border-b border-purple-900/30 bg-black/20 backdrop-blur-lg">
   
   {/* Left Section */}
   <div className="flex items-center gap-3">
@@ -60,7 +60,7 @@ return(
         Logout
       </button> */}
 
-<div className="relative z-[999]">
+<div className="relative z-50">
 
   <button
     onClick={() => setShowDropdown(!showDropdown)}
@@ -72,7 +72,7 @@ return(
   {
     showDropdown && (
 
-      <div className="absolute right-0 mt-3 w-52 bg-[#141414] border border-purple-500/20 rounded-2xl shadow-2xl overflow-hidden z-[999]">
+      <div className="absolute right-0 mt-3 w-52 bg-[#141414] border border-purple-500/20 rounded-2xl shadow-2xl overflow-hidden z-[9999]">
 
         <button
           onClick={() => {
