@@ -121,7 +121,7 @@ const handleSend =  async ()=>{
         if(data.type === "ai"){
           setStatus("");
           setLoading(false);
-           if(!user){
+         /*   if(!user){
       setMessages((prev)=>[
          ...prev,
          {
@@ -129,7 +129,7 @@ const handleSend =  async ()=>{
             content:data.payload.text
          }
       ]);
-   }
+   } */
           if(currentChatId && user){
               fetchChatMessages(currentChatId);
           }
@@ -137,10 +137,10 @@ const handleSend =  async ()=>{
         }})
   }        
     useEffect(() => {
-    if(activeChatId && user){
+    if(activeChatId){
         fetchChatMessages(activeChatId);
     }
-}, [activeChatId , user]);
+}, [activeChatId]);
         useEffect(()=>{
          messageEndRef.current?.scrollIntoView({behavior:"smooth"})
         },[messages])
