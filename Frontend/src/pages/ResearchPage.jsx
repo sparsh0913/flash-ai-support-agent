@@ -164,7 +164,7 @@ const handleSend =  async ()=>{
                   <div className="flex-1 relative z-10 flex flex-col">
                <div className="relative w-full">
                              <button
-                               className="md:hidden absolute left-4 top-1/2 -translate-y-1/2 z-50 text-2xl"
+                               className="md:hidden absolute left-4 top-1/2 -translate-y-1/2 z-[100] text-2xl"
                                onClick={() => setIsSidebarOpen(true)}
                              >
                                ☰
