@@ -149,13 +149,17 @@ const handleDeleteChat = async (chatId) => {
                                 e.stopPropagation();
                                 handleDeleteChat(chat._id);
                               }}
-                           className="
-                                  shrink-0
-                                  opacity-100 md:opacity-0
-                                  md:group-hover:opacity-100
-                                  text-gray-400 hover:text-red-400
-                                  transition
-                                  "
+                           className={`
+                                    shrink-0
+                                    transition
+                                    text-gray-400 hover:text-red-400
+
+                                    ${
+                                      activeChatId === chat._id
+                                        ? "opacity-100"
+                                        : "opacity-0 md:group-hover:opacity-100"
+                                    }
+                                    `}
                             >
                               ✕
                             </button>
