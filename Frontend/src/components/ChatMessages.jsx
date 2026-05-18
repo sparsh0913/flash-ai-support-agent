@@ -17,16 +17,13 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
        {
         messages.map((msg,index)=>(
        <div
-            key={index}
-              /* className={`flex ${
-           msg.role === "user" ? "justify-end" : "justify-start"
-             }`} */
-             className={`flex min-w-0 ${
-            msg.role === "user" ? "justify-end" : "justify-start"
-            }`}
-       >
+  key={index}
+  className={`flex min-w-0 max-w-full overflow-hidden ${
+    msg.role === "user" ? "justify-end" : "justify-start"
+  }`}
+>
         <div
-          className={`max-w-xl px-4 py-3 rounded-2xl ${
+         className={`max-w-[85vw] md:max-w-xl overflow-x-auto px-4 py-3 rounded-2xl ${
           msg.role === "user"
             ? "bg-purple-600 text-white"
             : "bg-white/10 text-gray-200 backdrop-blur-lg"
