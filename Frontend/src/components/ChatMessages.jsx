@@ -18,9 +18,12 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
         messages.map((msg,index)=>(
        <div
             key={index}
-              className={`flex ${
+              /* className={`flex ${
            msg.role === "user" ? "justify-end" : "justify-start"
-             }`}
+             }`} */
+             className={`flex min-w-0 ${
+              msg.role === "user" ? "justify-end" : "justify-start"
+              }`}
        >
         <div
           className={`max-w-xl px-4 py-3 rounded-2xl ${
