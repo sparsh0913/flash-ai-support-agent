@@ -230,12 +230,12 @@ if (connected === "true") {
 ) : (
   
 <div className="flex-1 flex items-center justify-center">
-<div className="bg-[#14061f] border border-purple-500/20 rounded-3xl p-8 max-w-md w-full text-center">
-<h2 className="text-2xl font-bold mb-4">
+<div className="bg-[#14061f] border border-purple-500/20 rounded-2xl md:rounded-3xl p-5 md:p-8 max-w-sm md:max-w-md w-[90%] text-center">
+<h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 leading-snug">
  Connect Google Calendar
 </h2>
 
-<p className="text-gray-400 mb-6">
+<p className="text-gray-400 text-sm md:text-base leading-relaxed mb-5 md:mb-6">
  Connect your calendar to schedule meetings,
  check events, manage availability,
  and use Calendar AI features.
@@ -246,7 +246,7 @@ if (connected === "true") {
    window.location.href =
 `${import.meta.env.VITE_BACKEND_URL}/auth?token=${user.accessToken}`;
  }}
- className="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-2xl font-medium transition-all"
+ className="bg-purple-600 hover:bg-purple-700 px-5 md:px-6 py-3 rounded-xl md:rounded-2xl text-sm md:text-base font-medium transition-all"
 >
  Connect Calendar
 </button>
