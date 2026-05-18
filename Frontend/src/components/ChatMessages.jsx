@@ -26,7 +26,7 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
               }`}
        >
         <div
-          className={`max-w-xl px-4 py-3 rounded-2xl ${
+          className={`max-w-xl w-full min-w-0 overflow-hidden px-4 py-3 rounded-2xl ${
           msg.role === "user"
             ? "bg-purple-600 text-white"
             : "bg-white/10 text-gray-200 backdrop-blur-lg"
