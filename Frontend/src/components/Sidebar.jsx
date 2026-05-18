@@ -33,9 +33,16 @@ const handleDeleteChat = async (chatId) => {
       setChats((prev) =>
         prev.filter((chat) => chat._id !== chatId)
       );
+
+      if(activeChatId === chatId){
+      setActiveChatId(null);
+      setMessages([]);
+   }
+      toast.success("Chat deleted successfully");
     }
   } catch (error) {
     console.log(error);
+    toast.error("Failed to delete chat");
   }
 };
     {/* sidebar */}
