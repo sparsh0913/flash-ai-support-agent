@@ -7,7 +7,7 @@ import "highlight.js/styles/github-dark.css";
 export default function StateMessages({ messages, messageEndRef ,loading, status,mode}){
 
     return(
-        <div className="flex-1 p-6  overflow-y-auto space-y-4 pb-32">
+        <div className="flex-1 p-6 overflow-y-auto overflow-x-hidden space-y-4 pb-32">
 
             {messages.length === 0 && (
               <EmptyState mode={mode} />
@@ -22,8 +22,8 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
            msg.role === "user" ? "justify-end" : "justify-start"
              }`} */
              className={`flex min-w-0 ${
-              msg.role === "user" ? "justify-end" : "justify-start"
-              }`}
+            msg.role === "user" ? "justify-end" : "justify-start"
+            }`}
        >
         <div
           className={`max-w-xl px-4 py-3 rounded-2xl ${
@@ -55,13 +55,11 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
   <ReactMarkdown
     rehypePlugins={[rehypeHighlight]}
     components={{
-     pre: ({ children }) => (
-  <div className="max-w-full overflow-x-auto">
-    <pre className="min-w-0 rounded-xl p-4 text-sm">
-      {children}
-    </pre>
-  </div>
-),
+      pre: ({ children }) => (
+        <pre className="overflow-x-auto max-w-full rounded-xl">
+          {children}
+        </pre>
+      ),
 
       code: ({ children, className }) => (
         <code className={`${className || ""} break-words`}>
