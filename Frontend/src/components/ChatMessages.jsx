@@ -51,21 +51,23 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
     {msg.content}
   </ReactMarkdown>
 </div> */
-<div className="prose prose-invert max-w-none break-words overflow-hidden">
+<div className="prose prose-invert max-w-none">
   <ReactMarkdown
     rehypePlugins={[rehypeHighlight]}
     components={{
-      pre: ({ children }) => (
-        <pre className="overflow-x-auto max-w-full rounded-xl">
-          {children}
-        </pre>
-      ),
+     pre: ({ children }) => (
+  <div className="w-full overflow-x-auto">
+    <pre className="rounded-xl p-4 text-sm bg-black/40 min-w-max">
+      {children}
+    </pre>
+  </div>
+),
 
-      code: ({ children, className }) => (
-        <code className={`${className || ""} break-words`}>
-          {children}
-        </code>
-      )
+    code: ({ children, className }) => (
+  <code className={className || ""}>
+    {children}
+  </code>
+)
     }}
   >
     {msg.content}
