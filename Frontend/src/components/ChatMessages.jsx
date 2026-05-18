@@ -26,7 +26,7 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
               }`}
        >
         <div
-          className={`max-w-xl w-full min-w-0 overflow-hidden px-4 py-3 rounded-2xl ${
+          className={`max-w-xl px-4 py-3 rounded-2xl ${
           msg.role === "user"
             ? "bg-purple-600 text-white"
             : "bg-white/10 text-gray-200 backdrop-blur-lg"
@@ -55,11 +55,13 @@ export default function StateMessages({ messages, messageEndRef ,loading, status
   <ReactMarkdown
     rehypePlugins={[rehypeHighlight]}
     components={{
-      pre: ({ children }) => (
-        <pre className="overflow-x-auto max-w-full rounded-xl">
-          {children}
-        </pre>
-      ),
+     pre: ({ children }) => (
+  <div className="max-w-full overflow-x-auto">
+    <pre className="min-w-0 rounded-xl p-4 text-sm">
+      {children}
+    </pre>
+  </div>
+),
 
       code: ({ children, className }) => (
         <code className={`${className || ""} break-words`}>
