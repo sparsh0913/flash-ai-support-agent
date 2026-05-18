@@ -3,7 +3,6 @@ export default function ProfileModal({ user, setShowProfile }) {
   return (
 
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-
       <div className=" bg-[#141414] border border-purple-500/20 rounded-3xl p-5 md:p-8 w-[92%] max-w-md max-h-[90vh] overflow-y-auto text-white relative">
 
         <button

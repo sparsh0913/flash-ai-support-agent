@@ -95,41 +95,37 @@ const content = {
 
 const current = content[mode] || content.normal;
   return (
-  <div className="flex-1 flex flex-col items-center justify-center text-white px-6">
+  <div className="flex-1 flex flex-col items-center text-white px-4 md:px-6 pt-10 md:justify-center">
 
-    <h1 className="text-4xl font-bold mb-4">
+   <h1 className="text-3xl md:text-4xl font-bold mb-3 text-center leading-tight">
       {current.title}
     </h1>
 
-    <p className="text-gray-400 text-center max-w-2xl mb-10">
+    <p className="text-gray-400 text-center text-sm md:text-base max-w-md mb-6">
       {current.subtitle}
     </p>
 
-    <div className="grid grid-cols-2 gap-4 w-full max-w-3xl">
+    <div className="grid grid-cols-2 gap-3 w-full max-w-md">
 
       {
         current.cards.map((card, index) => (
 
           <div
             key={index}
-            className="bg-[#141414] border border-purple-500/10 rounded-2xl p-5 hover:border-purple-500/30 transition"
+           className="bg-[#141414] border border-purple-500/10 rounded-xl p-4 hover:border-purple-500/30 transition"
           >
 
-            <h2 className="text-lg font-semibold mb-2">
+           <h2 className="text-base md:text-lg font-semibold mb-2 leading-snug">
               {card.title}
             </h2>
 
-            <p className="text-gray-400 text-sm">
+           <p className="text-gray-400 text-xs md:text-sm leading-relaxed">
               {card.text}
             </p>
-
           </div>
-
         ))
       }
-
     </div>
-
   </div>
 )
 }
