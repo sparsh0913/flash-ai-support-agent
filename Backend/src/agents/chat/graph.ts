@@ -10,9 +10,7 @@ const searchTool = new TavilySearch({
 });
 
 const toolNode = new ToolNode([searchTool]);
-
 const llmWithTools = model.bindTools([searchTool]);
-
 
 const State = MessagesAnnotation;
   const currentDateTime = new Date().toLocaleString("en-IN", {
