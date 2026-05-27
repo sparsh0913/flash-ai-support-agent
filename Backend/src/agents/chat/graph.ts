@@ -2,6 +2,7 @@ import { StateGraph, START, END, MessagesAnnotation } from "@langchain/langgraph
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { TavilySearch } from "@langchain/tavily";
 import { model } from "../../config/model.js";
+import { MemorySaver } from "@langchain/langgraph";
 
 const searchTool = new TavilySearch({
   maxResults: 3,
@@ -60,6 +61,7 @@ function shouldContinue(state: typeof MessagesAnnotation.State) {
   return "__end__";
 }
 
+const checkpointer = new MemorySaver();
 export const graph = new StateGraph(MessagesAnnotation)
 
 .addNode("chatbot", chatBot)
@@ -74,4 +76,4 @@ export const graph = new StateGraph(MessagesAnnotation)
 
 .addEdge("tools", "chatbot")
 
-.compile();
+.compile({checkpointer});

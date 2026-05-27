@@ -1,6 +1,7 @@
 import { graph } from "./graph.js";
 
-export async function runChat(query: string) {
+
+export async function runChat(query: string,threadId: string) {
   const stream = await graph.stream({
     messages: [
       {
@@ -9,7 +10,10 @@ export async function runChat(query: string) {
       }
     ]
   },{
-      streamMode:"messages"
+      streamMode:"messages",
+       configurable: {
+   thread_id: threadId
+  }
     });
 
   return stream;

@@ -421,7 +421,7 @@ res.write(`data:${JSON.stringify(chatEvent)}\n\n`);
 }
 }
     
-    const stream = await runChat(query);
+    const stream = await runChat(query,chatId);
     let fullResponse = "";
     for await(const chunk of stream){
       const [messageChunk] = chunk;
