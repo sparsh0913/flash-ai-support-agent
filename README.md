@@ -8,7 +8,7 @@ The platform supports intelligent chat interactions, AI-powered research assista
 
 ---
 ## 🌐 Live Demo
-https://flash-ai-frontend-lon3.onrender.com
+https://flash-ai-support-agent.vercel.app
 
 # ✨ Core Features
 
