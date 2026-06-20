@@ -1,15 +1,18 @@
+import "dotenv/config";
 import axios from "axios";
 
 export async function retrievalTool(
   queries: string[],
-  userId: string
+  userId: string,
+  chatId:string
 ) {
   try {
     const { data } = await axios.post(
-      "https://flash-ai-support-agent.onrender.com/search",
+      `${process.env.RAG_URL}/search`,
       {
         queries,
         userId,
+        chatId
       }
     );
 

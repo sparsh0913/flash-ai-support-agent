@@ -49,7 +49,7 @@ const url = oauth2Client.generateAuthUrl({
    scope: scopes,
    state: token
 })
-   console.log("url", url);
+  
     res.redirect(url);
 })
 
@@ -59,7 +59,7 @@ app.get("/callback", async (req,res)=>{
 
     //exchange code with access tokens/refresh token
     const {tokens} = await oauth2Client.getToken(code);
-    console.log(tokens);
+    
 
   /*   const userId = req.query.state as string; */
         const token = req.query.state as string;
@@ -506,6 +506,7 @@ if (activeChatId) {
     const stream = await graph.stream({
       messages: [new HumanMessage(message)],
       userId: (req as any).user.id,
+      chatId:activeChatId,
       iterations: 0,
       finalAnswer: "",
     },
@@ -616,6 +617,7 @@ app.post(
        });
        ragFormData.append("pdf", blob, file.originalname);
         ragFormData.append("userId", (req as any).user.id);
+        ragFormData.append("chatId", activeChatId);
 
         const controller = new AbortController();
 
@@ -625,7 +627,7 @@ app.post(
 
 
         const ragResponse = await fetch(
-          "https://flash-ai-support-agent.onrender.com/upload",
+           `${process.env.RAG_URL}/upload`,
           {
             method: "POST",
             body: ragFormData,
@@ -646,7 +648,7 @@ return res.status(500).json({
 });
 }
 
-       const ragData = await ragResponse.json();
+const ragData = await ragResponse.json();
 
 console.log(ragData);
 

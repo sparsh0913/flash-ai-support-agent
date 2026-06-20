@@ -6,8 +6,8 @@ const router = express.Router();
 router.post("/" , async (req,res)=>{
 
     try{
-    const {queries, userId} = req.body;
-    const docs = await searchDocs(queries,userId);
+    const {queries, userId,chatId} = req.body;
+    const docs = await searchDocs(queries,userId,chatId);
 
     res.json({
       success: true,

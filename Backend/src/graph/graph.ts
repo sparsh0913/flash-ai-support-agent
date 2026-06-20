@@ -113,7 +113,8 @@ export async function retrievalNode(state: typeof State.State){
     .filter(Boolean);
 
     const userId = state.userId;
-  const result = await retrievalTool(queries, userId);
+    const chatId = state.chatId;
+  const result = await retrievalTool(queries, userId,chatId);
 
   return {
     messages: [

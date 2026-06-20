@@ -1,7 +1,7 @@
 import { embeddings } from "../config/embedding.js";
 import { pineconeIndex } from "../config/pinecone.js";
 
-export async function searchDocs(queries: string[] , userId: string){
+export async function searchDocs(queries: string[] , userId: string , chatId:string){
 const MIN_SCORE = 0.10;
     const query = queries[0];
     const vector = await embeddings.embedQuery(query);
@@ -11,7 +11,8 @@ const MIN_SCORE = 0.10;
         topK:5,
         includeMetadata:true,
         filter: {
-         userId: userId
+         userId: userId,
+         chatId:chatId
        }
     })
 

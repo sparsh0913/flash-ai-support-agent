@@ -15,6 +15,8 @@ router.post("/", upload.single("pdf"), async (req,res)=>{
     try{
    const file = req.file;
    const userId = req.body.userId;
+const chatId = req.body.chatId;
+   
   
    if(!file){
     return res.status(400).json({
@@ -30,7 +32,8 @@ router.post("/", upload.single("pdf"), async (req,res)=>{
    const result = await processPdf(
   file.path,
   file.originalname,
-  userId
+  userId,
+  chatId
 );
 
     res.json({

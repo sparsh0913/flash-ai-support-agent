@@ -22,7 +22,7 @@ export async function readPdf(filePath : string){
     
 }
 
-export async function processPdf(filePath: string ,fileName:string , userId:string ){
+export async function processPdf(filePath: string ,fileName:string , userId:string, chatId:string){
 
   console.log("PROCESS PDF USER ID:", userId);
   const chunks = await readPdf(filePath);
@@ -30,13 +30,14 @@ export async function processPdf(filePath: string ,fileName:string , userId:stri
  const vectors = await Promise.all(
   chunks.map(async (chunk, index) => {
     const values = await embeddings.embedQuery(chunk.pageContent);
- 
+   const uploadId = Date.now();
      console.log("UPSERT USER ID:", userId);
     return {
-      id: `${userId}-${fileName}-${index}`,
+     id: `${chatId}-${uploadId}-${index}`,
       values,
       metadata: {
         userId,
+        chatId,
         fileName,
         chunkIndex: index,
         text: chunk.pageContent,

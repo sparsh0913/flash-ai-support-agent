@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: ./Backend
+    depends_on:
+    - rag-service
+    container_name: backend-cont
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./Backend/.env.docker
+
+  rag-service:
+    build: ./rag-service
+    container_name: rag-cont
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./rag-service/.env.docker
+
+  frontend:
+    build:
+     context: ./Frontend
+     args:
+      VITE_BACKEND_URL: http://localhost:8080
+    container_name: frontend-cont
+    ports:
+      - "3000:80"
+    depends_on:
+    - backend
