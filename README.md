@@ -8,7 +8,7 @@ The platform supports intelligent chat interactions, AI-powered research assista
 
 ---
 ## 🌐 Live Demo
-https://flash-ai-support-agent.vercel.app
+http://13.206.69.214:3000/
 
 # ✨ Core Features
 
